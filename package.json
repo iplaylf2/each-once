@@ -1,0 +1,31 @@
+{
+  "name": "each-once",
+  "version": "0.0.0",
+  "description": "For each item in collection once.",
+  "main": "./each-once.js",
+  "types": "./each-once.d.ts",
+  "scripts": {
+    "init": "npm install",
+    "build": "npx gulp build",
+    "init-debug": "npm run build && cd debug && npm install && cd ..",
+    "pack": "npx gulp pack",
+    "publish": "npx gulp pack && npm publish ./package"
+  },
+  "author": "i-play-lf2",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "typescript": "^4.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Iplaylf2/each-once.git"
+  },
+  "keywords": [
+    "transduce",
+    "collection",
+    "stream",
+    "typescript"
+  ]
+}
