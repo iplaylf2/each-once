@@ -22,9 +22,9 @@ const s = function* () {
   }
 };
 
-const result = reduce(s(), tf, (r, x) => `${r}\n${x}`, "");
+const result = reduce((r, x: string) => `${r}\n${x}`, "")(tf)(s());
 console.log(result);
-foreach(s(), tf, (x) => console.log(x));
-for (const x of iterate(s(), tf)) {
+foreach((x: string) => console.log(x))(tf)(s());
+for (const x of iterate(tf)(s())) {
   console.log(x);
 }
