@@ -10,8 +10,27 @@ export function conj<T, K, R>(
   };
 }
 
+type Conj<T, K> = T extends TransduceFunction<infer A, infer B>
+  ? K extends TransduceFunction<infer C, infer D>
+    ? B extends C
+      ? TransduceFunction<A, D>
+      : never
+    : never
+  : never;
+
+type RecurConj<T extends TransduceFunction<any, any>[]> = [...T] extends [
+  infer A,
+  ...infer Rest
+]
+  ? Rest extends [infer B, ...infer Rest2]
+    ? Rest2 extends TransduceFunction<any, any>[]
+      ? RecurConj<[Conj<A, B>, ...Rest2]>
+      : Conj<A, B>
+    : A
+  : never;
+
 export function combine<T extends TransduceFunction<any, any>[]>(
   ...list: [...T]
-) {
-  return list.reduce((r, x) => conj(r, x));
+): RecurConj<T> {
+  return list.reduce((r, x) => conj(r, x)) as any;
 }

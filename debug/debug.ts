@@ -7,14 +7,13 @@ import {
   filter,
   take,
 } from "each-once";
-import { TransduceFunction } from "each-once/transduce/type";
 
-const tf: TransduceFunction<number, string> = combine(
+const tf = combine(
   map((x: number) => x * 2),
   filter((x: number) => x % 4 === 0),
   take<number>(10),
   map((x: number) => `x : ${x}`)
-) as any;
+);
 
 const s = function* () {
   let x = 0;
