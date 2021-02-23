@@ -20,13 +20,14 @@ type Conj<T, K> = T extends TransduceFunction<infer A, infer B>
 
 type RecurConj<T extends TransduceFunction<any, any>[]> = [...T] extends [
   infer A,
+  infer B,
   ...infer Rest
 ]
-  ? Rest extends [infer B, ...infer Rest2]
-    ? Rest2 extends TransduceFunction<any, any>[]
-      ? RecurConj<[Conj<A, B>, ...Rest2]>
+  ? Rest extends TransduceFunction<any, any>[]
+    ? Rest[0] extends TransduceFunction<any, any>
+      ? RecurConj<[Conj<A, B>, ...Rest]>
       : Conj<A, B>
-    : A
+    : never
   : never;
 
 export function combine<T extends TransduceFunction<any, any>[]>(
