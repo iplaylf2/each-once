@@ -1,3 +1,2 @@
-import {initTest} from "each-once"
+import {conj,reduce,foreach,iterate} from "each-once"
 
-console.log(initTest());

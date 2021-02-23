@@ -1,3 +1,2 @@
-export function initTest(){
-    return 1;
-}
+export { conj } from "./transduce";
+export { reduce, foreach, iterate } from "./iterable/sync";
