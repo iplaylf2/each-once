@@ -2,5 +2,8 @@
   "private": true,
   "dependencies": {
     "each-once": "file:../dist"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.31"
   }
 }
