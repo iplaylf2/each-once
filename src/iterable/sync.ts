@@ -4,6 +4,10 @@ interface ReduceFunction<T, K> {
   (r: K, x: T): K;
 }
 
+interface Action<T> {
+  (x: T): void;
+}
+
 export function reduce<T, K, R>(
   iter: Iterable<T>,
   tf: TransduceFunction<T, K>,
@@ -27,17 +31,13 @@ export function reduce<T, K, R>(
 
   for (const x of iter) {
     transduce(x);
-    
+
     if (is_break) {
       break;
     }
   }
 
   return r;
-}
-
-interface Action<T> {
-  (x: T): void;
 }
 
 export function foreach<T, K>(

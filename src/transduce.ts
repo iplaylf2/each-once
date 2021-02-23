@@ -9,3 +9,9 @@ export function conj<T, K, R>(
     return tf(next, break_);
   };
 }
+
+export function combine<T extends TransduceFunction<any, any>[]>(
+  ...list: [...T]
+) {
+  return list.reduce((r, x) => conj(r, x));
+}
