@@ -9,7 +9,7 @@ interface Action<T> {
 }
 
 export function reduce<T, K>(rf: ReduceFunction<T, K>, v: K) {
-  return <S>(tf: TransduceFunction<S, T>) => (iter: Iterable<S>): K => {
+  return function <S>(iter: Iterable<S>, tf: TransduceFunction<S, T>): K {
     let r = v;
     let is_break = false;
     const transduce = tf(
@@ -38,7 +38,7 @@ export function reduce<T, K>(rf: ReduceFunction<T, K>, v: K) {
 }
 
 export function foreach<T>(f: Action<T>) {
-  return <S>(tf: TransduceFunction<S, T>) => (iter: Iterable<S>): void => {
+  return function <S>(iter: Iterable<S>, tf: TransduceFunction<S, T>): void {
     let is_break = false;
     const transduce = tf(f, () => {
       is_break = true;
@@ -58,35 +58,36 @@ export function foreach<T>(f: Action<T>) {
   };
 }
 
-export function iterate<T, K>(tf: TransduceFunction<T, K>) {
-  return function* (iter: Iterable<T>): Generator<K> {
-    let result: K[] = [];
-    let is_break = false;
-    const transduce = tf(
-      (x) => {
-        result.push(x);
-      },
-      () => {
-        is_break = true;
-      }
-    );
+export function* iterate<T, K>(
+  iter: Iterable<T>,
+  tf: TransduceFunction<T, K>
+): Generator<K> {
+  let result: K[] = [];
+  let is_break = false;
+  const transduce = tf(
+    (x) => {
+      result.push(x);
+    },
+    () => {
+      is_break = true;
+    }
+  );
+
+  if (is_break) {
+    return;
+  }
+
+  for (const x of iter) {
+    transduce(x);
+
+    for (const x of result) {
+      yield x;
+    }
 
     if (is_break) {
-      return;
+      break;
+    } else {
+      result = [];
     }
-
-    for (const x of iter) {
-      transduce(x);
-
-      for (const x of result) {
-        yield x;
-      }
-
-      if (is_break) {
-        break;
-      } else {
-        result = [];
-      }
-    }
-  };
+  }
 }

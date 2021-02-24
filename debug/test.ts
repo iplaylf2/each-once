@@ -17,13 +17,13 @@ const world = function (arr_size: number, repeat: number) {
 
   const suit2 = function () {
     const tf = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
-    reduce(rf, 0)(tf)(data);
+    reduce(rf, 0)(data, tf);
   };
 
   const tf_ = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
-  const transduce = reduce(rf, 0)(tf_);
+  const reduce_ = reduce(rf, 0);
   const suit3 = function () {
-    transduce(data);
+    reduce_(data, tf_);
   };
 
   let t1 = 0,
