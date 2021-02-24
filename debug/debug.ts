@@ -20,7 +20,7 @@ const world = function (arr_size: number) {
       const tf = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
       reduce(tf, rf, 0)(data);
     })
-    .add("each-once 简单优化", function () {
+    .add("each-once 使用优化", function () {
       reduce_(data);
     })
     // add listeners
@@ -29,6 +29,8 @@ const world = function (arr_size: number) {
     })
     .on("complete", function (this: any) {
       console.log("Fastest is " + this.filter("fastest").map("name"));
+      const base = this[0].hz;
+      this.forEach((x: any) => console.log(`x/base x ${x.hz / base}`));
     })
     // run async
     .run({ async: true });
