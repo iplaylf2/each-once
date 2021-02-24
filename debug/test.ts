@@ -4,11 +4,7 @@ import { performance } from "perf_hooks";
 const world = function (arr_size: number, repeat: number) {
   const data = new Array(arr_size).fill(0);
 
-  const mf = (x: number) => {
-    const now = performance.now();
-    while (performance.now() - now < 10 / 5 / arr_size);
-    return x;
-  };
+  const mf = (x: number) => x;
   const rf = (r: number, x: number) => r + x;
 
   const suit1 = function () {
@@ -31,14 +27,23 @@ const world = function (arr_size: number, repeat: number) {
     t3 = 0;
   for (let count = 0; count < repeat; count++) {
     let t = 0;
+    let wait = 0;
     t = performance.now();
     suit1();
+    wait = performance.now();
+    while (performance.now() - wait < 10);
     t1 += performance.now() - t;
+
     t = performance.now();
     suit2();
+    wait = performance.now();
+    while (performance.now() - wait < 10);
     t2 += performance.now() - t;
+
     t = performance.now();
     suit3();
+    wait = performance.now();
+    while (performance.now() - wait < 10);
     t3 += performance.now() - t;
   }
 
