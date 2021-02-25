@@ -5,7 +5,7 @@ import {
 } from "../../transduce/type";
 
 interface Action<T> {
-  (x: T): void;
+  (x: T): any;
 }
 
 export function foreach<T extends TransduceFunction<any, any>>(
@@ -13,19 +13,12 @@ export function foreach<T extends TransduceFunction<any, any>>(
   f: Action<TransduceFunctionOut<T>>
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): void {
-    let is_break = false;
-    const transduce = tf(f, () => {
-      is_break = true;
-    });
-
-    if (is_break) {
-      return;
-    }
+    const transduce = tf((x) => f(x) !== false);
 
     for (const x of iter) {
-      transduce(x);
+      const continue_ = transduce(x);
 
-      if (is_break) {
+      if (!continue_) {
         break;
       }
     }

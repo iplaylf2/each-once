@@ -1,13 +1,9 @@
 interface Raise<T> {
-  (x: T): void;
-}
-
-interface Break {
-  (): void;
+  (x: T): boolean;
 }
 
 export interface TransduceFunction<T, K> {
-  (next: Raise<K>, break_: Break): Raise<T>;
+  (next: Raise<K>): Raise<T>;
 }
 
 export type TransduceFunctionIn<

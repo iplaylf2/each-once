@@ -8,10 +8,7 @@ export function conj<T extends TransduceFunction<any, any>, K>(
   tf: T,
   tail: TransduceFunction<TransduceFunctionOut<T>, K>
 ): TransduceFunction<TransduceFunctionIn<T>, K> {
-  return (yield_, break_) => {
-    const next = tail(yield_, break_);
-    return tf(next, break_);
-  };
+  return (yield_) => tf(tail(yield_));
 }
 
 export type Conj<

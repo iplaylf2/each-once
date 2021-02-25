@@ -9,31 +9,19 @@ export function iterate<T extends TransduceFunction<any, any>>(tf: T) {
     iter: Iterable<TransduceFunctionIn<T>>
   ): Generator<TransduceFunctionOut<T>> {
     let result: TransduceFunctionOut<T>[] = [];
-    let is_break = false;
-    const transduce = tf(
-      (x) => {
-        result.push(x);
-      },
-      () => {
-        is_break = true;
-      }
-    );
-
-    if (is_break) {
-      return;
-    }
+    const transduce = tf((x) => (result.push(x), true));
 
     for (const x of iter) {
-      transduce(x);
+      const continue_ = transduce(x);
 
       for (const x of result) {
         yield x;
       }
 
-      if (is_break) {
-        break;
-      } else {
+      if (continue_) {
         result = [];
+      } else {
+        break;
       }
     }
   };

@@ -15,24 +15,12 @@ export function reduce<T extends TransduceFunction<any, any>, K>(
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): K {
     let r = v;
-    let is_break = false;
-    const transduce = tf(
-      (x) => {
-        r = rf(r, x);
-      },
-      () => {
-        is_break = true;
-      }
-    );
-
-    if (is_break) {
-      return r;
-    }
+    const transduce = tf((x) => ((r = rf(r, x)), true));
 
     for (const x of iter) {
-      transduce(x);
+      const continue_ = transduce(x);
 
-      if (is_break) {
+      if (!continue_) {
         break;
       }
     }

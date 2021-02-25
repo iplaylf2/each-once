@@ -19,55 +19,40 @@ export function map<T, K>(f: Map<T, K>): TransduceFunction<T, K> {
 export function scan<T, K>(f: Scan<T, K>, v: K): TransduceFunction<T, K> {
   return (next) => {
     let r = v;
-    return (x) => {
-      r = f(r, x);
-      next(r);
-    };
+    return (x) => ((r = f(r, x)), next(r));
   };
 }
 
 export function filter<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => (x) => {
-    if (f(x)) {
-      next(x);
-    }
-  };
+  return (next) => (x) => f(x) && next(x);
 }
 
 export function remove<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => (x) => {
-    if (!f(x)) {
-      next(x);
-    }
-  };
+  return (next) => (x) => f(x) || next(x);
 }
 
 export function take<T>(n: number): TransduceFunction<T, T> {
   n = Math.ceil(n);
   if (0 < n) {
-    return (next, break_) => {
+    return (next) => {
       let count = n;
       return (x) => {
         count--;
-        next(x);
         if (count === 0) {
-          break_();
+          next(x);
+          return false;
+        } else {
+          return next(x);
         }
       };
     };
   } else {
-    return (_, break_) => (break_(), () => {});
+    return () => () => false;
   }
 }
 
 export function takeWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next, break_) => (x) => {
-    if (f(x)) {
-      next(x);
-    } else {
-      break_();
-    }
-  };
+  return (next) => (x) => f(x) && next(x);
 }
 
 export function skip<T>(n: number): TransduceFunction<T, T> {
@@ -82,8 +67,9 @@ export function skip<T>(n: number): TransduceFunction<T, T> {
           if (count === 0) {
             skip = false;
           }
+          return true;
         } else {
-          next(x);
+          return next(x);
         }
       };
     };
@@ -98,12 +84,12 @@ export function skipWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
     return (x) => {
       if (skip) {
         if (f(x)) {
-          return;
+          return true;
         } else {
           skip = false;
         }
       }
-      next(x);
+      return next(x);
     };
   };
 }
@@ -114,12 +100,15 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
     throw "n <= 0";
   }
   return (next) => {
-    let result: T[] = [];
+    let cache: T[] = [];
     return (x) => {
-      result.push(x);
-      if (result.length === n) {
-        next(result);
-        result = [];
+      cache.push(x);
+      if (cache.length === n) {
+        const result = cache;
+        cache = [];
+        return next(result);
+      } else {
+        return true;
       }
     };
   };
@@ -127,19 +116,21 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
 
 export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
   return (next) => {
-    let result: T[];
+    let cache: T[];
     let flag: any;
     return (x) => {
       const current = f(x);
       if (flag === current) {
-        result.push(x);
+        cache.push(x);
       } else {
-        if (0 < result.length) {
-          next(result);
-        }
+        const result = cache;
         flag = current;
-        result = [x];
+        cache = [x];
+        if (result) {
+          return next(result);
+        }
       }
+      return true;
     };
   };
 }
@@ -147,7 +138,12 @@ export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
 export function flatten<T>(): TransduceFunction<T[], T> {
   return (next) => (xx) => {
     for (const x of xx) {
-      next(x);
+      const continue_ = next(x);
+      
+      if (!continue_) {
+        return false;
+      }
     }
+    return true;
   };
 }
