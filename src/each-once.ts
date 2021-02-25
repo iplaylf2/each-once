@@ -1,3 +1,8 @@
-export { conj, combine } from "./transduce";
-export { reduce, foreach, iterate } from "./iterable/sync";
-export { map, filter, take } from "./transduce/function/sync";
+import { combine } from "./transduce/combine";
+import { flatten, map } from "./transduce/function/sync";
+
+export * from "./transduce";
+export * from "./transduce/function/sync";
+export * from "./iterable/sync";
+
+const foo=combine(map((x:number)=>[x]),flatten<number>())

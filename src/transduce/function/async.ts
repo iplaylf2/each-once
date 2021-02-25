@@ -31,7 +31,7 @@ export function take<T>(n: number): TransduceFunction<T, T> {
       return async (x) => {
         count--;
         await next(x);
-        if (count === 0) {
+        if (count <= 0) {
           break_();
         }
       };
