@@ -13,22 +13,22 @@ interface Predicate<T> {
 }
 
 export function map<T, K>(f: Map<T, K>): TransduceFunction<T, K> {
-  return (next) => (x) => next(f(x));
+  return (next) => [(x) => next(f(x))];
 }
 
 export function scan<T, K>(f: Scan<T, K>, v: K): TransduceFunction<T, K> {
   return (next) => {
     let r = v;
-    return (x) => ((r = f(r, x)), next(r));
+    return [(x) => ((r = f(r, x)), next(r))];
   };
 }
 
 export function filter<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => (x) => f(x) && next(x);
+  return (next) => [(x) => f(x) && next(x)];
 }
 
 export function remove<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => (x) => f(x) || next(x);
+  return (next) => [(x) => f(x) || next(x)];
 }
 
 export function take<T>(n: number): TransduceFunction<T, T> {
@@ -36,23 +36,25 @@ export function take<T>(n: number): TransduceFunction<T, T> {
   if (0 < n) {
     return (next) => {
       let count = n;
-      return (x) => {
-        count--;
-        if (count === 0) {
-          next(x);
-          return false;
-        } else {
-          return next(x);
-        }
-      };
+      return [
+        (x) => {
+          count--;
+          if (count === 0) {
+            next(x);
+            return false;
+          } else {
+            return next(x);
+          }
+        },
+      ];
     };
   } else {
-    return () => () => false;
+    return () => [() => false];
   }
 }
 
 export function takeWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => (x) => f(x) && next(x);
+  return (next) => [(x) => f(x) && next(x)];
 }
 
 export function skip<T>(n: number): TransduceFunction<T, T> {
@@ -61,36 +63,40 @@ export function skip<T>(n: number): TransduceFunction<T, T> {
     let count = n;
     let skip = true;
     return (next) => {
-      return (x) => {
-        if (skip) {
-          count--;
-          if (count === 0) {
-            skip = false;
+      return [
+        (x) => {
+          if (skip) {
+            count--;
+            if (count === 0) {
+              skip = false;
+            }
+            return true;
+          } else {
+            return next(x);
           }
-          return true;
-        } else {
-          return next(x);
-        }
-      };
+        },
+      ];
     };
   } else {
-    return (next) => next;
+    return (next) => [next];
   }
 }
 
 export function skipWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
   return (next) => {
     let skip = true;
-    return (x) => {
-      if (skip) {
-        if (f(x)) {
-          return true;
-        } else {
-          skip = false;
+    return [
+      (x) => {
+        if (skip) {
+          if (f(x)) {
+            return true;
+          } else {
+            skip = false;
+          }
         }
-      }
-      return next(x);
-    };
+        return next(x);
+      },
+    ];
   };
 }
 
@@ -101,16 +107,19 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
   }
   return (next) => {
     let cache: T[] = [];
-    return (x) => {
-      cache.push(x);
-      if (cache.length === n) {
-        const result = cache;
-        cache = [];
-        return next(result);
-      } else {
-        return true;
-      }
-    };
+    return [
+      (x) => {
+        cache.push(x);
+        if (cache.length === n) {
+          const result = cache;
+          cache = [];
+          return next(result);
+        } else {
+          return true;
+        }
+      },
+      () => next(cache),
+    ];
   };
 }
 
@@ -118,32 +127,37 @@ export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
   return (next) => {
     let cache: T[];
     let flag: any;
-    return (x) => {
-      const current = f(x);
-      if (flag === current) {
-        cache.push(x);
-      } else {
-        const result = cache;
-        flag = current;
-        cache = [x];
-        if (result) {
-          return next(result);
+    return [
+      (x) => {
+        const current = f(x);
+        if (flag === current) {
+          cache.push(x);
+        } else {
+          const result = cache;
+          flag = current;
+          cache = [x];
+          if (result) {
+            return next(result);
+          }
         }
-      }
-      return true;
-    };
+        return true;
+      },
+      () => next(cache),
+    ];
   };
 }
 
 export function flatten<T>(): TransduceFunction<T[], T> {
-  return (next) => (xx) => {
-    for (const x of xx) {
-      const continue_ = next(x);
-      
-      if (!continue_) {
-        return false;
+  return (next) => [
+    (xx) => {
+      for (const x of xx) {
+        const continue_ = next(x);
+
+        if (!continue_) {
+          return false;
+        }
       }
-    }
-    return true;
-  };
+      return true;
+    },
+  ];
 }
