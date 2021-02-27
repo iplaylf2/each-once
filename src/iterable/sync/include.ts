@@ -5,8 +5,8 @@ import {
 } from "../../transduce/sync/type";
 
 export function include<T extends TransduceFunction<any, any>>(
-  tf: T,
-  v: TransduceFunctionOut<T>
+  v: TransduceFunctionOut<T>,
+  tf: T
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
     let include = false;

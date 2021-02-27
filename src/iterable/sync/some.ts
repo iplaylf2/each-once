@@ -9,8 +9,8 @@ interface Predicate<T> {
 }
 
 export function some<T extends TransduceFunction<any, any>>(
-  tf: T,
-  f: Predicate<TransduceFunctionOut<T>>
+  f: Predicate<TransduceFunctionOut<T>>,
+  tf: T
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
     let some = false;

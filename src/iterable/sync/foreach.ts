@@ -9,8 +9,8 @@ interface Action<T> {
 }
 
 export function foreach<T extends TransduceFunction<any, any>>(
-  tf: T,
-  f: Action<TransduceFunctionOut<T>>
+  f: Action<TransduceFunctionOut<T>>,
+  tf: T
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): void {
     const [transduce, squeeze] = tf((x) => f(x) !== false);

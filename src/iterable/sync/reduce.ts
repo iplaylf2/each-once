@@ -9,9 +9,9 @@ interface ReduceFunction<T, K> {
 }
 
 export function reduce<T extends TransduceFunction<any, any>, K>(
-  tf: T,
   rf: ReduceFunction<TransduceFunctionOut<T>, K>,
-  v: K
+  v: K,
+  tf: T
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): K {
     let r = v;
