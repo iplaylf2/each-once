@@ -2,7 +2,7 @@ import {
   TransduceFunction,
   TransduceFunctionIn,
   TransduceFunctionOut,
-} from "../../transduce/type";
+} from "../../transduce/sync/type";
 
 interface Action<T> {
   (x: T): any;

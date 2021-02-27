@@ -2,7 +2,7 @@ import {
   TransduceFunction,
   TransduceFunctionIn,
   TransduceFunctionOut,
-} from "../../transduce/type";
+} from "../../transduce/sync/type";
 
 export function include<T extends TransduceFunction<any, any>>(
   tf: T,

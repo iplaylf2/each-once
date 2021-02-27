@@ -1,4 +1,7 @@
-import { TransduceFunction, TransduceFunctionIn } from "../../transduce/type";
+import {
+  TransduceFunction,
+  TransduceFunctionIn,
+} from "../../transduce/sync/type";
 
 export function count<T extends TransduceFunction<any, any>>(tf: T) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): number {

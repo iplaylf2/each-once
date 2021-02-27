@@ -2,7 +2,7 @@ import {
   TransduceFunction,
   TransduceFunctionIn,
   TransduceFunctionOut,
-} from "../../transduce/type";
+} from "../../transduce/sync/type";
 
 interface ReduceFunction<T, K> {
   (r: K, x: T): K;

@@ -2,7 +2,7 @@ import {
   TransduceFunction,
   TransduceFunctionIn,
   TransduceFunctionOut,
-} from "../../transduce/type";
+} from "../../transduce/sync/type";
 
 export function toArray<T extends TransduceFunction<any, any>>(tf: T) {
   return function (
@@ -10,7 +10,7 @@ export function toArray<T extends TransduceFunction<any, any>>(tf: T) {
   ): TransduceFunctionOut<T>[] {
     let result: TransduceFunctionOut<T>[] = [];
     const [transduce, dispose] = tf((x) => (result.push(x), true));
-    
+
     for (const x of iter) {
       const continue_ = transduce(x);
 
