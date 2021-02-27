@@ -3,7 +3,7 @@ interface Raise<T> {
 }
 
 interface Dispose {
-  (): void;
+  (): boolean;
 }
 
 export interface TransduceFunction<T, K> {

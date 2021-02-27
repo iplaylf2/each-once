@@ -1,2 +1,2 @@
-export { conj } from "./transduce/conj";
+export { conj } from "./transduce/sync/conj";
 export { combine } from "./transduce/combine";

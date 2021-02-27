@@ -1,4 +1,4 @@
-import { TransduceFunction } from "../type";
+import { TransduceFunction } from "./type";
 
 interface Map<T, K> {
   (x: T): K;

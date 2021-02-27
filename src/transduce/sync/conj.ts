@@ -16,7 +16,7 @@ export function conj<T extends TransduceFunction<any, any>, K>(
       next1,
       dispose2
         ? dispose1
-          ? () => (dispose1(), dispose2())
+          ? () => dispose1() && dispose2()
           : dispose2
         : dispose1,
     ];
