@@ -24,7 +24,7 @@ export function scan<T, K>(f: Scan<T, K>, v: K): TransduceFunction<T, K> {
 }
 
 export function filter<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => [(x) => f(x) && next(x)];
+  return (next) => [(x) => (f(x) ? next(x) : true)];
 }
 
 export function remove<T>(f: Predicate<T>): TransduceFunction<T, T> {
@@ -118,7 +118,7 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
           return true;
         }
       },
-      () => next(cache),
+      () => 0 < cache.length && next(cache),
     ];
   };
 }
@@ -142,7 +142,7 @@ export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
         }
         return true;
       },
-      () => next(cache),
+      () => cache && next(cache),
     ];
   };
 }
