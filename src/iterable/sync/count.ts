@@ -1,6 +1,6 @@
 import { TransduceFunction } from "../../transduce/sync/type";
 
-export function count<T, K>(tf: TransduceFunction<T, K>) {
+export function count<T>(tf: TransduceFunction<T, any>) {
   return function (iter: Iterable<T>): number {
     let count = 0;
     const [transduce, squeeze] = tf(() => (count++, true));
