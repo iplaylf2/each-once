@@ -1,5 +1,5 @@
-import { conj, Conj } from "./sync/conj";
-import { TransduceFunction } from "./sync/type";
+import { conj, Conj } from "./conj";
+import { TransduceFunction } from "./type";
 
 type RecurConj<T extends TransduceFunction<any, any>[]> = [...T] extends [
   infer A,
