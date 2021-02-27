@@ -1,14 +1,8 @@
-import {
-  TransduceFunction,
-  TransduceFunctionIn,
-  TransduceFunctionOut,
-} from "../../transduce/sync/type";
+import { TransduceFunction } from "../../transduce/sync/type";
 
-export function first<T extends TransduceFunction<any, any>>(tf: T) {
-  return function (
-    iter: Iterable<TransduceFunctionIn<T>>
-  ): TransduceFunctionOut<T> | void {
-    let first: TransduceFunctionOut<T>;
+export function first<T, K>(tf: TransduceFunction<T, K>) {
+  return function (iter: Iterable<T>): K | void {
+    let first: K;
     const [transduce, squeeze] = tf((x) => ((first = x), false));
 
     for (const x of iter) {

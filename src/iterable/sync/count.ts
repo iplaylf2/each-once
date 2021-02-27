@@ -1,10 +1,7 @@
-import {
-  TransduceFunction,
-  TransduceFunctionIn,
-} from "../../transduce/sync/type";
+import { TransduceFunction } from "../../transduce/sync/type";
 
-export function count<T extends TransduceFunction<any, any>>(tf: T) {
-  return function (iter: Iterable<TransduceFunctionIn<T>>): number {
+export function count<T, K>(tf: TransduceFunction<T, K>) {
+  return function (iter: Iterable<T>): number {
     let count = 0;
     const [transduce, squeeze] = tf(() => (count++, true));
 

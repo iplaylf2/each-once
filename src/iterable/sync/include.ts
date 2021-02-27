@@ -1,14 +1,7 @@
-import {
-  TransduceFunction,
-  TransduceFunctionIn,
-  TransduceFunctionOut,
-} from "../../transduce/sync/type";
+import { TransduceFunction } from "../../transduce/sync/type";
 
-export function include<T extends TransduceFunction<any, any>>(
-  v: TransduceFunctionOut<T>,
-  tf: T
-) {
-  return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
+export function include<T, K>(v: K, tf: TransduceFunction<T, K>) {
+  return function (iter: Iterable<T>): boolean {
     let include = false;
     const [transduce, squeeze] = tf(
       (x) => x !== v || ((include = true), false)

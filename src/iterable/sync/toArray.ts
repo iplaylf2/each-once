@@ -1,14 +1,8 @@
-import {
-  TransduceFunction,
-  TransduceFunctionIn,
-  TransduceFunctionOut,
-} from "../../transduce/sync/type";
+import { TransduceFunction } from "../../transduce/sync/type";
 
-export function toArray<T extends TransduceFunction<any, any>>(tf: T) {
-  return function (
-    iter: Iterable<TransduceFunctionIn<T>>
-  ): TransduceFunctionOut<T>[] {
-    let result: TransduceFunctionOut<T>[] = [];
+export function toArray<T, K>(tf: TransduceFunction<T, K>) {
+  return function (iter: Iterable<T>): K[] {
+    let result: K[] = [];
     const [transduce, squeeze] = tf((x) => (result.push(x), true));
 
     for (const x of iter) {
