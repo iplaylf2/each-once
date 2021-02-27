@@ -9,7 +9,7 @@ export function first<T extends TransduceFunction<any, any>>(tf: T) {
     iter: Iterable<TransduceFunctionIn<T>>
   ): TransduceFunctionOut<T> | void {
     let first: TransduceFunctionOut<T>;
-    const [transduce, dispose] = tf((x) => ((first = x), false));
+    const [transduce, squeeze] = tf((x) => ((first = x), false));
 
     for (const x of iter) {
       const continue_ = transduce(x);
@@ -19,7 +19,7 @@ export function first<T extends TransduceFunction<any, any>>(tf: T) {
       }
     }
 
-    dispose?.();
+    squeeze?.();
     return first!;
   };
 }

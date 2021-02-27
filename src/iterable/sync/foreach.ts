@@ -13,7 +13,7 @@ export function foreach<T extends TransduceFunction<any, any>>(
   f: Action<TransduceFunctionOut<T>>
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): void {
-    const [transduce, dispose] = tf((x) => f(x) !== false);
+    const [transduce, squeeze] = tf((x) => f(x) !== false);
 
     for (const x of iter) {
       const continue_ = transduce(x);
@@ -23,6 +23,6 @@ export function foreach<T extends TransduceFunction<any, any>>(
       }
     }
 
-    dispose?.();
+    squeeze?.();
   };
 }

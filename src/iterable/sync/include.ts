@@ -10,7 +10,7 @@ export function include<T extends TransduceFunction<any, any>>(
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
     let include = false;
-    const [transduce, dispose] = tf(
+    const [transduce, squeeze] = tf(
       (x) => x !== v || ((include = true), false)
     );
 
@@ -22,7 +22,7 @@ export function include<T extends TransduceFunction<any, any>>(
       }
     }
 
-    dispose?.();
+    squeeze?.();
     return include;
   };
 }

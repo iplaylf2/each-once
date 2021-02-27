@@ -14,7 +14,7 @@ export function every<T extends TransduceFunction<any, any>>(
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
     let every = true;
-    const [transduce, dispose] = tf((x) => f(x) || ((every = false), false));
+    const [transduce, squeeze] = tf((x) => f(x) || ((every = false), false));
 
     for (const x of iter) {
       const continue_ = transduce(x);
@@ -24,7 +24,7 @@ export function every<T extends TransduceFunction<any, any>>(
       }
     }
 
-    dispose?.();
+    squeeze?.();
     return every;
   };
 }

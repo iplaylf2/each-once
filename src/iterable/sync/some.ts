@@ -14,7 +14,7 @@ export function some<T extends TransduceFunction<any, any>>(
 ) {
   return function (iter: Iterable<TransduceFunctionIn<T>>): boolean {
     let some = false;
-    const [transduce, dispose] = tf((x) =>
+    const [transduce, squeeze] = tf((x) =>
       f(x) ? ((some = true), false) : true
     );
 
@@ -26,7 +26,7 @@ export function some<T extends TransduceFunction<any, any>>(
       }
     }
 
-    dispose?.();
+    squeeze?.();
     return some;
   };
 }

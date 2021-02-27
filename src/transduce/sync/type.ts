@@ -2,12 +2,12 @@ interface Raise<T> {
   (x: T): boolean;
 }
 
-interface Dispose {
+interface Squeeze {
   (): boolean;
 }
 
 export interface TransduceFunction<T, K> {
-  (next: Raise<K>): [Raise<T>, Dispose?];
+  (next: Raise<K>): [Raise<T>, Squeeze?];
 }
 
 export type TransduceFunctionIn<
