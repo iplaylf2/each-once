@@ -21,12 +21,11 @@ export function reduce<T extends TransduceFunction<any, any>, K>(
       const continue_ = transduce(x);
 
       if (!continue_) {
-        break;
+        return r;
       }
     }
 
     dispose?.();
-
     return r;
   };
 }

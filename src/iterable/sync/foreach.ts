@@ -19,7 +19,7 @@ export function foreach<T extends TransduceFunction<any, any>>(
       const continue_ = transduce(x);
 
       if (!continue_) {
-        break;
+        return;
       }
     }
 
