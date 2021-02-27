@@ -1,3 +1,9 @@
 export { reduce } from "./sync/reduce";
 export { toArray } from "./sync/toArray";
 export { foreach } from "./sync/foreach";
+export { count } from "./sync/count";
+export { include } from "./sync/include";
+export { every } from "./sync/every";
+export { some } from "./sync/some";
+export { first } from "./sync/first";
+export { last } from "./sync/last";
