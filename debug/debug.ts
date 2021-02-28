@@ -1,27 +1,20 @@
-import {
-  combine,
-  reduce,
-  foreach,
-  map,
-  filter,
-  take,
-  partition,
-} from "each-once";
+import { combine, foreach, groupBy, take } from "each-once";
 
-const tf = combine(
-  map((x: number) => x * 2),
-  filter((x: number) => x % 4 === 0),
-  take<number>(10),
-  partition<number>(3)
-);
+import * as groupByReduce from "each-once/group-by";
 
 const s = function* () {
-  let x = 0;
   while (true) {
-    yield x++;
+    yield Math.random() * 10;
   }
 };
 
-const result = reduce((r, x) => `${r},${x}`, "", tf)(s());
-console.log(result);
-foreach((x) => console.log(x), tf)(s());
+foreach(
+  (x: number[]) => console.log(x),
+  combine(
+    take<number>(100),
+    groupBy(
+      (x: number) => Math.floor(x),
+      (k) => groupByReduce.toArray(take<number>(10))
+    )
+  )
+)(s());
