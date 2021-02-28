@@ -2,7 +2,7 @@ import { combine, reduce, map } from "each-once";
 import { Suite } from "benchmark";
 
 const world = function (arr_size: number) {
-  console.log(`测试数组长度为：${arr_size}`);
+  console.log(`Length of test data is ${arr_size}.`);
   const data = new Array(arr_size).fill(0);
 
   const mf = (x: number) => x;
@@ -13,14 +13,14 @@ const world = function (arr_size: number) {
 
   // add tests
   new Suite()
-    .add("原生数组", function () {
+    .add("Array", function () {
       data.map(mf).map(mf).map(mf).map(mf).map(mf).reduce(rf, 0);
     })
     .add("each-once", function () {
       const tf = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
       reduce(rf, 0, tf)(data);
     })
-    .add("each-once 使用优化", function () {
+    .add("each-once meticulously", function () {
       reduce_(data);
     })
     // add listeners
