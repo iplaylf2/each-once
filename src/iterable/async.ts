@@ -1,0 +1,9 @@
+export { reduce } from "./async/reduce";
+export { toArray } from "./async/toArray";
+export { foreach } from "./async/foreach";
+export { count } from "./async/count";
+export { include } from "./async/include";
+export { every } from "./async/every";
+export { some } from "./async/some";
+export { first } from "./async/first";
+export { last } from "./async/last";
