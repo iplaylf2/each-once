@@ -34,13 +34,14 @@ export function remove<T>(f: Predicate<T>): TransduceFunction<T, T> {
 export function take<T>(n: number): TransduceFunction<T, T> {
   n = Math.ceil(n);
   if (0 < n) {
-    return (next) => {
+    return (next, squeeze) => {
       let count = n;
       return [
         (x) => {
           count--;
           if (count === 0) {
             next(x);
+            squeeze?.();
             return false;
           } else {
             return next(x);
@@ -54,7 +55,7 @@ export function take<T>(n: number): TransduceFunction<T, T> {
 }
 
 export function takeWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next) => [(x) => f(x) && next(x)];
+  return (next, squeeze) => [(x) => (f(x) ? next(x) : (squeeze?.(), false))];
 }
 
 export function skip<T>(n: number): TransduceFunction<T, T> {

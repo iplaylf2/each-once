@@ -7,7 +7,7 @@ interface Squeeze {
 }
 
 export interface TransduceFunction<T, K> {
-  (next: Raise<K>): [Raise<T>, Squeeze?];
+  (next: Raise<K>, squeeze?: Squeeze): [Raise<T>, Squeeze?];
 }
 
 export type TransduceFunctionIn<
