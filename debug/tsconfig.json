@@ -23,8 +23,8 @@
     //Linter Checks
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
     //Advanced
   }
 }
