@@ -119,7 +119,7 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
           return true;
         }
       },
-      () => 0 < cache.length && next(cache),
+      () => (0 < cache.length ? next(cache) : true),
     ];
   };
 }
@@ -143,7 +143,7 @@ export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
         }
         return true;
       },
-      () => cache && next(cache),
+      () => (cache ? next(cache) : true),
     ];
   };
 }
