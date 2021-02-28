@@ -11,12 +11,30 @@ export function reduce<T, K, R>(
   v: R,
   tf?: TransduceFunction<T, K>
 ): GroupByReduce<T, R> {
+  let r = v;
+  let transduce: any = (x: any) => ((r = rf(r, x)), true),
+    squeeze: any;
+  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+
+  let isDone = false;
   return {
-    reduce() {},
-    done() {},
+    reduce(x) {
+      const continue_ = transduce(x);
+      if (continue_) {
+        return [false];
+      } else {
+        isDone = true;
+        return [true, r];
+      }
+    },
+    done() {
+      isDone = true;
+      squeeze?.();
+      return r;
+    },
 
     get isDone() {
-      return;
+      return isDone;
     },
-  } as any;
+  };
 }

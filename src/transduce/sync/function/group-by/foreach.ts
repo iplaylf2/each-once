@@ -10,12 +10,29 @@ export function foreach<T, K>(
   f: Action<OR<K, T>>,
   tf?: TransduceFunction<T, K>
 ): GroupByReduce<T, void> {
-  return {
-    reduce() {},
-    done() {},
+  let transduce: any = (x: any) => f(x) !== false,
+    squeeze: any;
+  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
-    get isDone() {
+  let isDone = false;
+  return {
+    reduce(x) {
+      const continue_ = transduce(x);
+      if (continue_) {
+        return [false];
+      } else {
+        isDone = true;
+        return [true] as any;
+      }
+    },
+    done() {
+      isDone = true;
+      squeeze?.();
       return;
     },
-  } as any;
+
+    get isDone() {
+      return isDone;
+    },
+  };
 }
