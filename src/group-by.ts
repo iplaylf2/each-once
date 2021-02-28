@@ -1,0 +1,9 @@
+export { reduce } from "./transduce/sync/function/group-by/reduce";
+export { toArray } from "./transduce/sync/function/group-by/toArray";
+export { foreach } from "./transduce/sync/function/group-by/foreach";
+export { count } from "./transduce/sync/function/group-by/count";
+export { include } from "./transduce/sync/function/group-by/include";
+export { every } from "./transduce/sync/function/group-by/every";
+export { some } from "./transduce/sync/function/group-by/some";
+export { first } from "./transduce/sync/function/group-by/first";
+export { last } from "./transduce/sync/function/group-by/last";
