@@ -29,14 +29,12 @@ const world = function (map_count: number, arr_size: number) {
     })
     .on("complete", function (this: any) {
       console.log("Fastest is " + this.filter("fastest").map("name"));
-      const base = this[0].hz;
-      this.forEach((x: any) => console.log(`x/base x ${x.hz / base}`));
     })
     // run async
     .run({ async: false });
 };
 
-for (let a = 3; a <= 5; a++) {
+for (let a = 2; a <= 5; a++) {
   for (let b = 100; b <= 100000; b *= 10) {
     world(a, b);
   }
