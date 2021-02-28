@@ -1,10 +1,18 @@
-import { combine, reduce, foreach, map, filter, take } from "each-once";
+import {
+  combine,
+  reduce,
+  foreach,
+  map,
+  filter,
+  take,
+  partition,
+} from "each-once";
 
 const tf = combine(
   map((x: number) => x * 2),
   filter((x: number) => x % 4 === 0),
   take<number>(10),
-  map((x: number) => `x : ${x}`)
+  partition<number>(3)
 );
 
 const s = function* () {
@@ -14,6 +22,6 @@ const s = function* () {
   }
 };
 
-const result = reduce((r, x: string) => `${r}\n${x}`, "", tf)(s());
+const result = reduce((r, x) => `${r},${x}`, "", tf)(s());
 console.log(result);
-foreach((x: string) => console.log(x), tf)(s());
+foreach((x) => console.log(x), tf)(s());
