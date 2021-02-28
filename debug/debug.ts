@@ -1,12 +1,4 @@
-import {
-  combine,
-  reduce,
-  foreach,
-  iterate,
-  map,
-  filter,
-  take,
-} from "each-once";
+import { combine, reduce, foreach, map, filter, take } from "each-once";
 
 const tf = combine(
   map((x: number) => x * 2),
@@ -22,9 +14,6 @@ const s = function* () {
   }
 };
 
-const result = reduce(tf, (r, x: string) => `${r}\n${x}`, "")(s());
+const result = reduce((r, x: string) => `${r}\n${x}`, "", tf)(s());
 console.log(result);
-foreach(tf, (x: string) => console.log(x))(s());
-for (const x of iterate(tf)(s())) {
-  console.log(x);
-}
+foreach((x: string) => console.log(x), tf)(s());

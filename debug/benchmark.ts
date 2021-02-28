@@ -9,7 +9,7 @@ const world = function (arr_size: number) {
   const rf = (r: number, x: number) => r + x;
 
   const tf_ = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
-  const reduce_ = reduce(tf_, rf, 0);
+  const reduce_ = reduce(rf, 0, tf_);
 
   // add tests
   new Suite()
@@ -18,7 +18,7 @@ const world = function (arr_size: number) {
     })
     .add("each-once", function () {
       const tf = combine(map(mf), map(mf), map(mf), map(mf), map(mf));
-      reduce(tf, rf, 0)(data);
+      reduce(rf, 0, tf)(data);
     })
     .add("each-once 使用优化", function () {
       reduce_(data);
