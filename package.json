@@ -1,6 +1,6 @@
 {
   "name": "each-once",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "For each item in collection once.",
   "main": "./each-once.js",
   "types": "./each-once.d.ts",
@@ -8,6 +8,7 @@
     "init": "npm install",
     "build": "npx gulp build",
     "init-debug": "npm run build && cd debug && npm install && cd ..",
+    "benchmark": "cd debug && npx tsc && node ./output/benchmark.js && cd ..",
     "pack": "npx gulp pack",
     "publish": "npx gulp pack && npm publish ./package"
   },

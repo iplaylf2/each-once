@@ -1,3 +1,2 @@
-export function initTest(){
-    return 1;
-}
+export * from "./transduce/sync";
+export * from "./iterable/sync"

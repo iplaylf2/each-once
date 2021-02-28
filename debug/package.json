@@ -2,5 +2,9 @@
   "private": true,
   "dependencies": {
     "each-once": "file:../dist"
+  },
+  "devDependencies": {
+    "@types/benchmark": "^2.1.0",
+    "benchmark": "^2.1.4"
   }
 }
