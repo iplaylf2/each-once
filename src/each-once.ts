@@ -1,3 +1,2 @@
-export * from "./transduce";
-export * from "./transduce/sync/function";
-export * from "./iterable/sync";
+export * from "./transduce/sync";
+export * from "./iterable/sync"
