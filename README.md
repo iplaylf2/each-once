@@ -66,4 +66,4 @@ each-once
 
 **each-once is more efficient!**
 
-## [Document](https://github.com/Iplaylf2/each-once/blob/main/doc/document.md)
+## [document](https://github.com/Iplaylf2/each-once/blob/main/doc/document.md)
