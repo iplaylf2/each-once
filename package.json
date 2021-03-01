@@ -1,6 +1,6 @@
 {
   "name": "each-once",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "For each item in collection once.",
   "main": "./each-once.js",
   "types": "./each-once.d.ts",
