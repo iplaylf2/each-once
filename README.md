@@ -64,4 +64,6 @@ each-once
 | 5                                   | 233850 | 25214 | 2499  | 242    |
   
 
-**each-once is more efficient than native array method!**
+**each-once is more efficient!**
+
+## [Document](https://github.com/Iplaylf2/each-once/blob/main/doc/document.md)
