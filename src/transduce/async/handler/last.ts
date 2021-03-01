@@ -1,18 +1,10 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
-import { OR } from "./tool";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
 
-interface ReduceFunction<T, K> {
-  (r: K, x: T): K | Promise<K>;
-}
-
-export function reduce<T, K, R>(
-  rf: ReduceFunction<OR<K, T>, R>,
-  v: R,
+export function last<T, K = T>(
   tf?: AsyncTransduceFunction<T, K>
-): GroupByReduce<T, R> {
-  let r = v;
-  let transduce: any = async (x: any) => ((r = await rf(r, x)), true),
+): AsyncTransduceHandler<T, K> {
+  let last: K;
+  let transduce: any = (x: any) => ((last = x), true),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -24,13 +16,13 @@ export function reduce<T, K, R>(
         return [false];
       } else {
         isDone = true;
-        return [true, r];
+        return [true, last];
       }
     },
     async done() {
       isDone = true;
       await squeeze?.();
-      return r;
+      return last;
     },
 
     get isDone() {

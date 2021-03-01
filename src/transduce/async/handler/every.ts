@@ -1,11 +1,17 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
+import { OR } from "./tool";
 
-export function last<T, K = T>(
+interface Predicate<T> {
+  (x: T): boolean | Promise<boolean>;
+}
+
+export function every<T, K>(
+  f: Predicate<OR<K, T>>,
   tf?: AsyncTransduceFunction<T, K>
-): GroupByReduce<T, K> {
-  let last: K;
-  let transduce: any = (x: any) => ((last = x), true),
+): AsyncTransduceHandler<T, boolean> {
+  let every = true;
+  let transduce: any = async (x: any) =>
+      (await f(x)) || ((every = false), false),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -17,13 +23,13 @@ export function last<T, K = T>(
         return [false];
       } else {
         isDone = true;
-        return [true, last];
+        return [true, every];
       }
     },
     async done() {
       isDone = true;
       await squeeze?.();
-      return last;
+      return every;
     },
 
     get isDone() {

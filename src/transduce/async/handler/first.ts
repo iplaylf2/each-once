@@ -1,9 +1,8 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
 
 export function first<T, K = T>(
   tf?: AsyncTransduceFunction<T, K>
-): GroupByReduce<T, K | void> {
+): AsyncTransduceHandler<T, K | void> {
   let first: K;
   let transduce: any = (x: any) => ((first = x), false),
     squeeze: any;

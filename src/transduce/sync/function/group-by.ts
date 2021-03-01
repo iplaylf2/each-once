@@ -1,32 +1,26 @@
-import { TransduceFunction } from "../type";
+import { TransduceFunction, TransduceHandler } from "../type";
 
 interface Group<T, K> {
   (x: T): K;
 }
 
-export interface GroupByReduce<T, K> {
-  reduce(x: T): [true, K] | [false];
-  done(): K;
-  isDone: boolean;
-}
-
-interface GroupByReduceFunction<T, Key, K> {
-  (k: Key): GroupByReduce<T, K>;
+interface GroupByReduce<T, Key, K> {
+  (k: Key): TransduceHandler<T, K>;
 }
 
 export function groupBy<T, Key, K>(
   f: Group<T, Key>,
-  grf: GroupByReduceFunction<T, Key, K>
+  gr: GroupByReduce<T, Key, K>
 ): TransduceFunction<T, K> {
   return (next) => {
-    const groupMap = new Map<Key, GroupByReduce<T, K>>();
-    const groupSort: GroupByReduce<T, K>[] = [];
+    const groupMap = new Map<Key, TransduceHandler<T, K>>();
+    const groupSort: TransduceHandler<T, K>[] = [];
     return [
       (x) => {
         const k = f(x);
         let group = groupMap.get(k);
         if (!group) {
-          group = grf(k);
+          group = gr(k);
           groupMap.set(k, group);
           groupSort.push(group);
         }

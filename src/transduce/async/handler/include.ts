@@ -1,11 +1,12 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
+import { OR } from "./tool";
 
-export function count<T>(
-  tf?: AsyncTransduceFunction<T, any>
-): GroupByReduce<T, number> {
-  let count = 0;
-  let transduce: any = () => (count++, true),
+export function include<T, K>(
+  v: OR<K, T>,
+  tf?: AsyncTransduceFunction<T, K>
+): AsyncTransduceHandler<T, boolean> {
+  let include = false;
+  let transduce: any = (x: any) => x !== v || ((include = true), false),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -17,13 +18,13 @@ export function count<T>(
         return [false];
       } else {
         isDone = true;
-        return [true, count];
+        return [true, include];
       }
     },
     async done() {
       isDone = true;
       await squeeze?.();
-      return count;
+      return include;
     },
 
     get isDone() {

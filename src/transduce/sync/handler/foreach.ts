@@ -1,13 +1,15 @@
-import { TransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
 import { OR } from "./tool";
 
-export function include<T, K>(
-  v: OR<K, T>,
+interface Action<T> {
+  (x: T): any;
+}
+
+export function foreach<T, K>(
+  f: Action<OR<K, T>>,
   tf?: TransduceFunction<T, K>
-): GroupByReduce<T, boolean> {
-  let include = false;
-  let transduce: any = (x: any) => x !== v || ((include = true), false),
+): TransduceHandler<T, void> {
+  let transduce: any = (x: any) => f(x) !== false,
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -19,13 +21,13 @@ export function include<T, K>(
         return [false];
       } else {
         isDone = true;
-        return [true, include];
+        return [true] as any;
       }
     },
     done() {
       isDone = true;
       squeeze?.();
-      return include;
+      return;
     },
 
     get isDone() {

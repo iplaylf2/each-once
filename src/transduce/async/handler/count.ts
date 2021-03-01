@@ -1,16 +1,10 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
-import { OR } from "./tool";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
 
-interface Action<T> {
-  (x: T): any;
-}
-
-export function foreach<T, K>(
-  f: Action<OR<K, T>>,
-  tf?: AsyncTransduceFunction<T, K>
-): GroupByReduce<T, void> {
-  let transduce: any = async (x: any) => (await f(x)) !== false,
+export function count<T>(
+  tf?: AsyncTransduceFunction<T, any>
+): AsyncTransduceHandler<T, number> {
+  let count = 0;
+  let transduce: any = () => (count++, true),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -22,13 +16,13 @@ export function foreach<T, K>(
         return [false];
       } else {
         isDone = true;
-        return [true] as any;
+        return [true, count];
       }
     },
     async done() {
       isDone = true;
       await squeeze?.();
-      return;
+      return count;
     },
 
     get isDone() {

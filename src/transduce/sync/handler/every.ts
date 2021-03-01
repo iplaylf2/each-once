@@ -1,11 +1,16 @@
-import { TransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
+import { OR } from "./tool";
 
-export function toArray<T, K = T>(
+interface Predicate<T> {
+  (x: T): boolean;
+}
+
+export function every<T, K>(
+  f: Predicate<OR<K, T>>,
   tf?: TransduceFunction<T, K>
-): GroupByReduce<T, K[]> {
-  let result: K[] = [];
-  let transduce: any = (x: any) => (result.push(x), true),
+): TransduceHandler<T, boolean> {
+  let every = true;
+  let transduce: any = (x: any) => f(x) || ((every = false), false),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -17,13 +22,13 @@ export function toArray<T, K = T>(
         return [false];
       } else {
         isDone = true;
-        return [true, result];
+        return [true, every];
       }
     },
     done() {
       isDone = true;
       squeeze?.();
-      return result;
+      return every;
     },
 
     get isDone() {

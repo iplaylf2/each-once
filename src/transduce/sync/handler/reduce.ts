@@ -1,17 +1,17 @@
-import { TransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
 import { OR } from "./tool";
 
-interface Predicate<T> {
-  (x: T): boolean;
+interface ReduceFunction<T, K> {
+  (r: K, x: T): K;
 }
 
-export function every<T, K>(
-  f: Predicate<OR<K, T>>,
+export function reduce<T, K, R>(
+  rf: ReduceFunction<OR<K, T>, R>,
+  v: R,
   tf?: TransduceFunction<T, K>
-): GroupByReduce<T, boolean> {
-  let every = true;
-  let transduce: any = (x: any) => f(x) || ((every = false), false),
+): TransduceHandler<T, R> {
+  let r = v;
+  let transduce: any = (x: any) => ((r = rf(r, x)), true),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -23,13 +23,13 @@ export function every<T, K>(
         return [false];
       } else {
         isDone = true;
-        return [true, every];
+        return [true, r];
       }
     },
     done() {
       isDone = true;
       squeeze?.();
-      return every;
+      return r;
     },
 
     get isDone() {

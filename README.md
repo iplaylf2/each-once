@@ -2,6 +2,9 @@
 
 For each item in collection once.
 
+English | [中文](https://github.com/Iplaylf2/each-once/blob/main/doc/README.cn.md)
+-
+
 ## feature
 
 - Easy to use.
@@ -42,6 +45,28 @@ console.log(result); // 180
 
 ## benchmark
 
-each-once is more efficient than native array method when do a series of operation to the collection.
+Benchmark which map n times and reduce once. [from benchmark.ts](https://github.com/Iplaylf2/each-once/blob/main/debug/benchmark.ts)
 
-[codesandbox](https://codesandbox.io/s/benchmark-jpxfi)
+array
+
+| map times \ ops/sec \  array length | 100     | 1000  | 10000 | 100000 |
+| ----------------------------------- | ------- | ----- | ----- | ------ |
+| 2                                   | 1193319 | 28799 | 2688  | 195    |
+| 3                                   | 199984  | 22248 | 2166  | 155    |
+| 4                                   | 167229  | 17363 | 1685  | 126    |
+| 5                                   | 144092  | 14313 | 1356  | 96.84  |
+  
+
+each-once
+
+| map times \ ops/sec \  array length | 100    | 1000  | 10000 | 100000 |
+| ----------------------------------- | ------ | ----- | ----- | ------ |
+| 2                                   | 524905 | 50661 | 5370  | 562    |
+| 3                                   | 373222 | 38385 | 4066  | 397    |
+| 4                                   | 284126 | 31329 | 3133  | 315    |
+| 5                                   | 233850 | 25214 | 2499  | 242    |
+  
+
+**each-once is more efficient!**
+
+## [document](https://github.com/Iplaylf2/each-once/blob/main/doc/document.md)
