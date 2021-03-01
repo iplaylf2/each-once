@@ -1,5 +1,4 @@
-import { TransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
 import { OR } from "./tool";
 
 interface Predicate<T> {
@@ -9,7 +8,7 @@ interface Predicate<T> {
 export function some<T, K>(
   f: Predicate<OR<K, T>>,
   tf?: TransduceFunction<T, K>
-): GroupByReduce<T, boolean> {
+): TransduceHandler<T, boolean> {
   let some = false;
   let transduce: any = (x: any) => (f(x) ? ((some = true), false) : true),
     squeeze: any;

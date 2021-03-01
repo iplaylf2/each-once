@@ -1,26 +1,20 @@
-import { AsyncTransduceFunction } from "../type";
+import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
 
 interface Group<T, K> {
   (x: T): K | Promise<K>;
 }
 
-export interface GroupByReduce<T, K> {
-  reduce(x: T): Promise<[true, K] | [false]>;
-  done(): Promise<K>;
-  isDone: boolean;
-}
-
-interface GroupByReduceFunction<T, Key, K> {
-  (k: Key): GroupByReduce<T, K>;
+interface GroupByReduce<T, Key, K> {
+  (k: Key): AsyncTransduceHandler<T, K>;
 }
 
 export function groupBy<T, Key, K>(
   f: Group<T, Key>,
-  grf: GroupByReduceFunction<T, Key, K>
+  grf: GroupByReduce<T, Key, K>
 ): AsyncTransduceFunction<T, K> {
   return (next) => {
-    const groupMap = new Map<Key, GroupByReduce<T, K>>();
-    const groupSort: GroupByReduce<T, K>[] = [];
+    const groupMap = new Map<Key, AsyncTransduceHandler<T, K>>();
+    const groupSort: AsyncTransduceHandler<T, K>[] = [];
     return [
       async (x) => {
         const k = await f(x);

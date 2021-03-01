@@ -163,4 +163,4 @@ export function flatten<T>(): TransduceFunction<T[], T> {
   ];
 }
 
-export { groupBy, GroupByReduce } from "./function/group-by";
+export { groupBy } from "./function/group-by";

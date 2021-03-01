@@ -1,11 +1,10 @@
-import { TransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
 
-export function last<T, K = T>(
-  tf?: TransduceFunction<T, K>
-): GroupByReduce<T, K> {
-  let last: K;
-  let transduce: any = (x: any) => ((last = x), true),
+export function count<T>(
+  tf?: TransduceFunction<T, any>
+): TransduceHandler<T, number> {
+  let count = 0;
+  let transduce: any = () => (count++, true),
     squeeze: any;
   [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
 
@@ -17,13 +16,13 @@ export function last<T, K = T>(
         return [false];
       } else {
         isDone = true;
-        return [true, last];
+        return [true, count];
       }
     },
     done() {
       isDone = true;
       squeeze?.();
-      return last;
+      return count;
     },
 
     get isDone() {

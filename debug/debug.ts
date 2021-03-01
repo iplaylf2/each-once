@@ -1,6 +1,6 @@
 import { combine, foreach, groupBy, take } from "each-once";
 
-import * as groupByReduce from "each-once/group-by";
+import * as Transduce from "each-once/transduce";
 
 const s = function* () {
   while (true) {
@@ -14,7 +14,7 @@ foreach(
     take<number>(100),
     groupBy(
       (x: number) => Math.floor(x),
-      (k) => groupByReduce.toArray(take<number>(10))
+      (k) => Transduce.toArray(take<number>(10))
     )
   )
 )(s());

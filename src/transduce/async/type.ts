@@ -17,3 +17,9 @@ export type AsyncTransduceFunctionIn<
 export type AsyncTransduceFunctionOut<
   T extends AsyncTransduceFunction<any, any>
 > = T extends AsyncTransduceFunction<any, infer K> ? K : never;
+
+export interface AsyncTransduceHandler<T, K> {
+  reduce(x: T): Promise<[true, K] | [false]>;
+  done(): Promise<K>;
+  isDone: boolean;
+}

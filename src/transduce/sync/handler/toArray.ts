@@ -1,9 +1,8 @@
-import { AsyncTransduceFunction } from "../../type";
-import { GroupByReduce } from "../group-by";
+import { TransduceFunction, TransduceHandler } from "../type";
 
 export function toArray<T, K = T>(
-  tf?: AsyncTransduceFunction<T, K>
-): GroupByReduce<T, K[]> {
+  tf?: TransduceFunction<T, K>
+): TransduceHandler<T, K[]> {
   let result: K[] = [];
   let transduce: any = (x: any) => (result.push(x), true),
     squeeze: any;
@@ -11,8 +10,8 @@ export function toArray<T, K = T>(
 
   let isDone = false;
   return {
-    async reduce(x) {
-      const continue_ = await transduce(x);
+    reduce(x) {
+      const continue_ = transduce(x);
       if (continue_) {
         return [false];
       } else {
@@ -20,9 +19,9 @@ export function toArray<T, K = T>(
         return [true, result];
       }
     },
-    async done() {
+    done() {
       isDone = true;
-      await squeeze?.();
+      squeeze?.();
       return result;
     },
 

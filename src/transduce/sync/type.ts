@@ -17,3 +17,9 @@ export type TransduceFunctionIn<
 export type TransduceFunctionOut<
   T extends TransduceFunction<any, any>
 > = T extends TransduceFunction<any, infer K> ? K : never;
+
+export interface TransduceHandler<T, K> {
+  reduce(x: T): [true, K] | [false];
+  done(): K;
+  isDone: boolean;
+}
