@@ -45,7 +45,7 @@ console.log(result); // 180
 
 ## benchmark
 
-map n 次和 reduce 一次的 benchmark 测试。 [from benchmark.ts](https://github.com/Iplaylf2/each-once/blob/main/debug/benchmark.ts)
+map n 次和 reduce 一次的 benchmark 测试。 [源自 benchmark.ts](https://github.com/Iplaylf2/each-once/blob/main/debug/benchmark.ts)
 
 array
 
