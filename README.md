@@ -2,6 +2,9 @@
 
 For each item in collection once.
 
+English | [中文](https://github.com/Iplaylf2/each-once/blob/main/doc/README.cn.md)
+-
+
 ## feature
 
 - Easy to use.
