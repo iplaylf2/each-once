@@ -1,9 +1,9 @@
-export { reduce } from "./handler/reduce";
-export { toArray } from "./handler/toArray";
-export { foreach } from "./handler/foreach";
 export { count } from "./handler/count";
 export { include } from "./handler/include";
 export { every } from "./handler/every";
 export { some } from "./handler/some";
 export { first } from "./handler/first";
 export { last } from "./handler/last";
+export { reduce } from "./handler/reduce";
+export { foreach } from "./handler/foreach";
+export { toArray } from "./handler/toArray";
