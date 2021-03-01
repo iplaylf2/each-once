@@ -10,7 +10,7 @@ interface GroupByReduce<T, Key, K> {
 
 export function groupBy<T, Key, K>(
   f: Group<T, Key>,
-  grf: GroupByReduce<T, Key, K>
+  gr: GroupByReduce<T, Key, K>
 ): AsyncTransduceFunction<T, K> {
   return (next) => {
     const groupMap = new Map<Key, AsyncTransduceHandler<T, K>>();
@@ -20,7 +20,7 @@ export function groupBy<T, Key, K>(
         const k = await f(x);
         let group = groupMap.get(k);
         if (!group) {
-          group = grf(k);
+          group = gr(k);
           groupMap.set(k, group);
           groupSort.push(group);
         }

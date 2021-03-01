@@ -91,7 +91,7 @@ export function skipWhile<T>(f: Predicate<T>): AsyncTransduceFunction<T, T> {
     return [
       async (x) => {
         if (skip) {
-          if (f(x)) {
+          if (await f(x)) {
             return true;
           } else {
             skip = false;
