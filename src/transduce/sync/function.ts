@@ -40,8 +40,9 @@ export function take<T>(n: number): TransduceFunction<T, T> {
         (x) => {
           count--;
           if (count === 0) {
-            next(x);
-            squeeze?.();
+            if (next(x)) {
+              squeeze?.();
+            }
             return false;
           } else {
             return next(x);

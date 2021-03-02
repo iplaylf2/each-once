@@ -40,8 +40,9 @@ export function take<T>(n: number): AsyncTransduceFunction<T, T> {
         async (x) => {
           count--;
           if (count === 0) {
-            await next(x);
-            await squeeze?.();
+            if (await next(x)) {
+              await squeeze?.();
+            }
             return false;
           } else {
             return next(x);
