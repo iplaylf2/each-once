@@ -40,8 +40,7 @@ export function take<T>(n: number): AsyncTransduceFunction<T, T> {
         async (x) => {
           count--;
           if (count === 0) {
-            await next(x);
-            await squeeze?.();
+            (await next(x)) && (await squeeze?.());
             return false;
           } else {
             return next(x);
@@ -91,7 +90,7 @@ export function skipWhile<T>(f: Predicate<T>): AsyncTransduceFunction<T, T> {
     return [
       async (x) => {
         if (skip) {
-          if (f(x)) {
+          if (await f(x)) {
             return true;
           } else {
             skip = false;
