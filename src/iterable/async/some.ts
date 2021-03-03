@@ -7,7 +7,7 @@ interface Predicate<T> {
 export function some<T, K>(f: Predicate<K>, tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<boolean> {
     let some = false;
-    const [transduce, squeeze] = tf(async (x) =>
+    const [transduce, dispose] = tf(async (x) =>
       (await f(x)) ? ((some = true), false) : true
     );
 
@@ -19,7 +19,7 @@ export function some<T, K>(f: Predicate<K>, tf: AsyncTransduceFunction<T, K>) {
       }
     }
 
-    await squeeze?.(continue_);
+    await dispose?.(continue_);
     
     return some;
   };

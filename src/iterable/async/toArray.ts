@@ -3,7 +3,7 @@ import { AsyncTransduceFunction } from "../../transduce/async/type";
 export function toArray<T, K>(tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<K[]> {
     let result: K[] = [];
-    const [transduce, squeeze] = tf(async (x) => (result.push(x), true));
+    const [transduce, dispose] = tf(async (x) => (result.push(x), true));
 
     let continue_ = true;
     for await (const x of iter) {
@@ -13,7 +13,7 @@ export function toArray<T, K>(tf: AsyncTransduceFunction<T, K>) {
       }
     }
 
-    await squeeze?.(continue_);
+    await dispose?.(continue_);
     
     return result;
   };

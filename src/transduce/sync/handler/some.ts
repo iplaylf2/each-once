@@ -11,8 +11,8 @@ export function some<T, K>(
 ): TransduceHandler<T, boolean> {
   let some = false;
   let transduce: any = (x: any) => (f(x) ? ((some = true), false) : true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -21,14 +21,14 @@ export function some<T, K>(
       if (continue_) {
         return [false];
       } else {
-        squeeze?.(false);
+        dispose?.(false);
         isDone = true;
         return [true, some];
       }
     },
     done() {
       isDone = true;
-      squeeze?.(true);
+      dispose?.(true);
       return some;
     },
 

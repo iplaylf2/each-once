@@ -2,12 +2,12 @@ interface Raise<T> {
   (x: T): Promise<boolean>;
 }
 
-interface Squeeze {
+interface Dispose {
   (continue_: boolean): Promise<boolean>;
 }
 
 export interface AsyncTransduceFunction<T, K> {
-  (next: Raise<K>): [Raise<T>, Squeeze?];
+  (next: Raise<K>): [Raise<T>, Dispose?];
 }
 
 export type AsyncTransduceFunctionIn<

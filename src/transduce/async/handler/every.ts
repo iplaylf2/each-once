@@ -12,8 +12,8 @@ export function every<T, K>(
   let every = true;
   let transduce: any = async (x: any) =>
       (await f(x)) || ((every = false), false),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -22,14 +22,14 @@ export function every<T, K>(
       if (continue_) {
         return [false];
       } else {
-        await squeeze?.(false);
+        await dispose?.(false);
         isDone = true;
         return [true, every];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.(true);
+      await dispose?.(true);
       return every;
     },
 

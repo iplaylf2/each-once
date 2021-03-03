@@ -3,7 +3,7 @@ import { AsyncTransduceFunction } from "../../transduce/async/type";
 export function last<T, K>(tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<K | void> {
     let last: K;
-    const [transduce, squeeze] = tf(async (x) => ((last = x), true));
+    const [transduce, dispose] = tf(async (x) => ((last = x), true));
 
     let continue_ = true;
     for await (const x of iter) {
@@ -13,7 +13,7 @@ export function last<T, K>(tf: AsyncTransduceFunction<T, K>) {
       }
     }
 
-    await squeeze?.(continue_);
+    await dispose?.(continue_);
     
     return last!;
   };

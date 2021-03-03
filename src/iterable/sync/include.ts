@@ -3,7 +3,7 @@ import { TransduceFunction } from "../../transduce/sync/type";
 export function include<T, K>(v: K, tf: TransduceFunction<T, K>) {
   return function (iter: Iterable<T>): boolean {
     let include = false;
-    const [transduce, squeeze] = tf(
+    const [transduce, dispose] = tf(
       (x) => x !== v || ((include = true), false)
     );
 
@@ -15,7 +15,7 @@ export function include<T, K>(v: K, tf: TransduceFunction<T, K>) {
       }
     }
 
-    squeeze?.(continue_);
+    dispose?.(continue_);
 
     return include;
   };

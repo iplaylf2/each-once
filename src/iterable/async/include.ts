@@ -3,7 +3,7 @@ import { AsyncTransduceFunction } from "../../transduce/async/type";
 export function include<T, K>(v: K, tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<boolean> {
     let include = false;
-    const [transduce, squeeze] = tf(
+    const [transduce, dispose] = tf(
       async (x) => x !== v || ((include = true), false)
     );
 
@@ -15,7 +15,7 @@ export function include<T, K>(v: K, tf: AsyncTransduceFunction<T, K>) {
       }
     }
 
-    await squeeze?.(continue_);
+    await dispose?.(continue_);
     
     return include;
   };

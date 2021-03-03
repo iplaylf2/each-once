@@ -7,7 +7,7 @@ interface Predicate<T> {
 export function some<T, K>(f: Predicate<K>, tf: TransduceFunction<T, K>) {
   return function (iter: Iterable<T>): boolean {
     let some = false;
-    const [transduce, squeeze] = tf((x) =>
+    const [transduce, dispose] = tf((x) =>
       f(x) ? ((some = true), false) : true
     );
 
@@ -19,7 +19,7 @@ export function some<T, K>(f: Predicate<K>, tf: TransduceFunction<T, K>) {
       }
     }
 
-    squeeze?.(continue_);
+    dispose?.(continue_);
 
     return some;
   };

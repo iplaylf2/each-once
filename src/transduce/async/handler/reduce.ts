@@ -12,8 +12,8 @@ export function reduce<T, K, R>(
 ): AsyncTransduceHandler<T, R> {
   let r = v;
   let transduce: any = async (x: any) => ((r = await rf(r, x)), true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -22,14 +22,14 @@ export function reduce<T, K, R>(
       if (continue_) {
         return [false];
       } else {
-        await squeeze?.(false);
+        await dispose?.(false);
         isDone = true;
         return [true, r];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.(true);
+      await dispose?.(true);
       return r;
     },
 

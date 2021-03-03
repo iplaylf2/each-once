@@ -5,8 +5,8 @@ export function count<T>(
 ): TransduceHandler<T, number> {
   let count = 0;
   let transduce: any = () => (count++, true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -15,14 +15,14 @@ export function count<T>(
       if (continue_) {
         return [false];
       } else {
-        squeeze?.(false);
+        dispose?.(false);
         isDone = true;
         return [true, count];
       }
     },
     done() {
       isDone = true;
-      squeeze?.(true);
+      dispose?.(true);
       return count;
     },
 

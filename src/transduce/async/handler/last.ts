@@ -5,8 +5,8 @@ export function last<T, K = T>(
 ): AsyncTransduceHandler<T, K> {
   let last: K;
   let transduce: any = (x: any) => ((last = x), true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -15,14 +15,14 @@ export function last<T, K = T>(
       if (continue_) {
         return [false];
       } else {
-        await squeeze?.(false);
+        await dispose?.(false);
         isDone = true;
         return [true, last];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.(true);
+      await dispose?.(true);
       return last;
     },
 

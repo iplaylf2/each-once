@@ -11,7 +11,7 @@ export function reduce<T, K, R>(
 ) {
   return async function (iter: AsyncIterable<T>): Promise<R> {
     let r = v;
-    const [transduce, squeeze] = tf(async (x) => ((r = await rf(r, x)), true));
+    const [transduce, dispose] = tf(async (x) => ((r = await rf(r, x)), true));
 
     let continue_ = true;
     for await (const x of iter) {
@@ -21,7 +21,7 @@ export function reduce<T, K, R>(
       }
     }
 
-    await squeeze?.(continue_);
+    await dispose?.(continue_);
     
     return r;
   };

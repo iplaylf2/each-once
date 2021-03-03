@@ -9,15 +9,15 @@ export function conj<T extends AsyncTransduceFunction<any, any>, K>(
   tail: AsyncTransduceFunction<AsyncTransduceFunctionOut<T>, K>
 ): AsyncTransduceFunction<AsyncTransduceFunctionIn<T>, K> {
   return (yield_) => {
-    const [next2, squeeze2] = tail(yield_);
-    const [next1, squeeze1] = tf(next2);
+    const [next2, dispose2] = tail(yield_);
+    const [next1, dispose1] = tf(next2);
     return [
       next1,
-      squeeze2
-        ? squeeze1
-          ? async (continue_) => squeeze2(await squeeze1(continue_))
-          : squeeze2
-        : squeeze1,
+      dispose2
+        ? dispose1
+          ? async (continue_) => dispose2(await dispose1(continue_))
+          : dispose2
+        : dispose1,
     ];
   };
 }

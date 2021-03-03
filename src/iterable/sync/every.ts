@@ -7,7 +7,7 @@ interface Predicate<T> {
 export function every<T, K>(f: Predicate<K>, tf: TransduceFunction<T, K>) {
   return function (iter: Iterable<T>): boolean {
     let every = true;
-    const [transduce, squeeze] = tf((x) => f(x) || ((every = false), false));
+    const [transduce, dispose] = tf((x) => f(x) || ((every = false), false));
 
     let continue_ = true;
     for (const x of iter) {
@@ -17,7 +17,7 @@ export function every<T, K>(f: Predicate<K>, tf: TransduceFunction<T, K>) {
       }
     }
 
-    squeeze?.(continue_);
+    dispose?.(continue_);
 
     return every;
   };

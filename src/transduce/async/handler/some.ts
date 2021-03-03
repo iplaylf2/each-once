@@ -12,8 +12,8 @@ export function some<T, K>(
   let some = false;
   let transduce: any = async (x: any) =>
       (await f(x)) ? ((some = true), false) : true,
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -22,14 +22,14 @@ export function some<T, K>(
       if (continue_) {
         return [false];
       } else {
-        await squeeze?.(false);
+        await dispose?.(false);
         isDone = true;
         return [true, some];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.(true);
+      await dispose?.(true);
       return some;
     },
 
