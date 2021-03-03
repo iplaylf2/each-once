@@ -1,19 +1,20 @@
-import { combine, groupBy, take, foreach } from "each-once";
-import * as Transduce from "each-once/transduce";
+import { combine, take, foreach, partition } from "each-once/async";
 
-const s = function* () {
+const s = async function* () {
+  let count=0
   while (true) {
-    yield Math.random() * 10;
+    yield count++;
   }
 };
 
 foreach(
-  (x: number[]) => console.log(x),
+  (x: number[][]) => console.log(x),
   combine(
-    take<number>(100),
-    groupBy(
-      (x: number) => Math.floor(x),
-      (key) => Transduce.toArray(take<number>(10))
-    )
+    take<number[]>(1000),
+    partition<number>(7),
+    partition<number[]>(7)
   )
-)(s());
+)(s()).then(()=>{
+  void 1;
+});
+
