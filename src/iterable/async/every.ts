@@ -7,19 +7,20 @@ interface Predicate<T> {
 export function every<T, K>(f: Predicate<K>, tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<boolean> {
     let every = true;
-    const [transduce, squeeze] = tf(
+    const [transduce, dispose] = tf(
       async (x) => (await f(x)) || ((every = false), false)
     );
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return every;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await dispose?.(continue_);
+    
     return every;
   };
 }

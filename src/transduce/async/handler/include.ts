@@ -7,8 +7,8 @@ export function include<T, K>(
 ): AsyncTransduceHandler<T, boolean> {
   let include = false;
   let transduce: any = (x: any) => x !== v || ((include = true), false),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -17,13 +17,14 @@ export function include<T, K>(
       if (continue_) {
         return [false];
       } else {
+        await dispose?.(false);
         isDone = true;
         return [true, include];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await dispose?.(true);
       return include;
     },
 

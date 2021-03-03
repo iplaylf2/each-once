@@ -11,17 +11,18 @@ export function reduce<T, K, R>(
 ) {
   return async function (iter: AsyncIterable<T>): Promise<R> {
     let r = v;
-    const [transduce, squeeze] = tf(async (x) => ((r = await rf(r, x)), true));
+    const [transduce, dispose] = tf(async (x) => ((r = await rf(r, x)), true));
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return r;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await dispose?.(continue_);
+    
     return r;
   };
 }

@@ -11,8 +11,8 @@ export function every<T, K>(
 ): TransduceHandler<T, boolean> {
   let every = true;
   let transduce: any = (x: any) => f(x) || ((every = false), false),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -21,13 +21,14 @@ export function every<T, K>(
       if (continue_) {
         return [false];
       } else {
+        dispose?.(false);
         isDone = true;
         return [true, every];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      dispose?.(true);
       return every;
     },
 

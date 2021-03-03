@@ -12,8 +12,8 @@ export function reduce<T, K, R>(
 ): TransduceHandler<T, R> {
   let r = v;
   let transduce: any = (x: any) => ((r = rf(r, x)), true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -22,13 +22,14 @@ export function reduce<T, K, R>(
       if (continue_) {
         return [false];
       } else {
+        dispose?.(false);
         isDone = true;
         return [true, r];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      dispose?.(true);
       return r;
     },
 

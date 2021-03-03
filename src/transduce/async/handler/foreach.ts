@@ -10,8 +10,8 @@ export function foreach<T, K>(
   tf?: AsyncTransduceFunction<T, K>
 ): AsyncTransduceHandler<T, void> {
   let transduce: any = async (x: any) => (await f(x)) !== false,
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -20,13 +20,14 @@ export function foreach<T, K>(
       if (continue_) {
         return [false];
       } else {
+        await dispose?.(false);
         isDone = true;
         return [true] as any;
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await dispose?.(true);
       return;
     },
 

@@ -5,8 +5,8 @@ export function toArray<T, K = T>(
 ): TransduceHandler<T, K[]> {
   let result: K[] = [];
   let transduce: any = (x: any) => (result.push(x), true),
-    squeeze: any;
-  [transduce, squeeze] = tf ? tf(transduce) : [transduce]!;
+    dispose: any;
+  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
   let isDone = false;
   return {
@@ -15,13 +15,14 @@ export function toArray<T, K = T>(
       if (continue_) {
         return [false];
       } else {
+        dispose?.(false);
         isDone = true;
         return [true, result];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      dispose?.(true);
       return result;
     },
 
