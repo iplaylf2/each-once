@@ -5,15 +5,16 @@ export function count<T>(tf: TransduceFunction<T, any>) {
     let count = 0;
     const [transduce, squeeze] = tf(() => (count++, true));
 
+    let continue_ = true;
     for (const x of iter) {
-      const continue_ = transduce(x);
-
-      if (!continue_) {
-        return count;
+      if (!transduce(x)) {
+        continue_ = false;
+        break;
       }
     }
 
-    squeeze?.();
+    squeeze?.(continue_);
+
     return count;
   };
 }

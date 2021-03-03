@@ -5,15 +5,16 @@ export function last<T, K>(tf: TransduceFunction<T, K>) {
     let last: K;
     const [transduce, squeeze] = tf((x) => ((last = x), true));
 
+    let continue_ = true;
     for (const x of iter) {
-      const continue_ = transduce(x);
-
-      if (!continue_) {
-        return last!;
+      if (!transduce(x)) {
+        continue_ = false;
+        break;
       }
     }
 
-    squeeze?.();
+    squeeze?.(continue_);
+
     return last!;
   };
 }

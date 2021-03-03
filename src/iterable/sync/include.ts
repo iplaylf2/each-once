@@ -7,15 +7,16 @@ export function include<T, K>(v: K, tf: TransduceFunction<T, K>) {
       (x) => x !== v || ((include = true), false)
     );
 
+    let continue_ = true;
     for (const x of iter) {
-      const continue_ = transduce(x);
-
-      if (!continue_) {
-        return include;
+      if (!transduce(x)) {
+        continue_ = false;
+        break;
       }
     }
 
-    squeeze?.();
+    squeeze?.(continue_);
+
     return include;
   };
 }

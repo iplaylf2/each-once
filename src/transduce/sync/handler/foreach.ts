@@ -20,13 +20,14 @@ export function foreach<T, K>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true] as any;
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return;
     },
 

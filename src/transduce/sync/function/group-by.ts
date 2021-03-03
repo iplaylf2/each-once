@@ -33,7 +33,11 @@ export function groupBy<T, Key, K>(
         }
         return true;
       },
-      () => {
+      (continue_) => {
+        if (!continue_) {
+          return false;
+        }
+
         for (const group of groupSort) {
           if (group.isDone) {
             continue;
@@ -46,6 +50,7 @@ export function groupBy<T, Key, K>(
             return false;
           }
         }
+
         return true;
       },
     ];

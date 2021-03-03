@@ -34,18 +34,23 @@ export function remove<T>(f: Predicate<T>): TransduceFunction<T, T> {
 export function take<T>(n: number): TransduceFunction<T, T> {
   n = Math.ceil(n);
   if (0 < n) {
-    return (next, squeeze) => {
+    return (next) => {
       let count = n;
+      let dispose = false;
+      let last: T;
       return [
         (x) => {
           count--;
           if (count === 0) {
-            next(x) && squeeze?.();
+            // raise 'break' as soon as possible
+            dispose = true;
+            last = x;
             return false;
           } else {
             return next(x);
           }
         },
+        (continue_) => (dispose ? next(last) : continue_),
       ];
     };
   } else {
@@ -54,7 +59,20 @@ export function take<T>(n: number): TransduceFunction<T, T> {
 }
 
 export function takeWhile<T>(f: Predicate<T>): TransduceFunction<T, T> {
-  return (next, squeeze) => [(x) => (f(x) ? next(x) : (squeeze?.(), false))];
+  return (next) => {
+    let dispose = false;
+    return [
+      (x) => {
+        if (f(x)) {
+          return next(x);
+        } else {
+          dispose = true;
+          return false;
+        }
+      },
+      (continue_) => dispose || continue_,
+    ];
+  };
 }
 
 export function skip<T>(n: number): TransduceFunction<T, T> {
@@ -118,7 +136,7 @@ export function partition<T>(n: number): TransduceFunction<T, T[]> {
           return true;
         }
       },
-      () => (0 < cache.length ? next(cache) : true),
+      (continue_) => continue_ && (0 < cache.length ? next(cache) : true),
     ];
   };
 }
@@ -142,7 +160,7 @@ export function partitionBy<T>(f: Map<T, any>): TransduceFunction<T, T[]> {
         }
         return true;
       },
-      () => (cache ? next(cache) : true),
+      (continue_) => continue_ && (cache ? next(cache) : true),
     ];
   };
 }

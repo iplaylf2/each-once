@@ -5,15 +5,16 @@ export function first<T, K>(tf: TransduceFunction<T, K>) {
     let first: K;
     const [transduce, squeeze] = tf((x) => ((first = x), false));
 
+    let continue_ = true;
     for (const x of iter) {
-      const continue_ = transduce(x);
-
-      if (!continue_) {
-        return first!;
+      if (!transduce(x)) {
+        continue_ = false;
+        break;
       }
     }
 
-    squeeze?.();
+    squeeze?.(continue_);
+
     return first!;
   };
 }

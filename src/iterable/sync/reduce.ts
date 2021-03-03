@@ -13,15 +13,16 @@ export function reduce<T, K, R>(
     let r = v;
     const [transduce, squeeze] = tf((x) => ((r = rf(r, x)), true));
 
+    let continue_ = true;
     for (const x of iter) {
-      const continue_ = transduce(x);
-
-      if (!continue_) {
-        return r;
+      if (!transduce(x)) {
+        continue_ = false;
+        break;
       }
     }
 
-    squeeze?.();
+    squeeze?.(continue_);
+
     return r;
   };
 }

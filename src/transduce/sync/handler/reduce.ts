@@ -22,13 +22,14 @@ export function reduce<T, K, R>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true, r];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return r;
     },
 

@@ -21,13 +21,14 @@ export function some<T, K>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true, some];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return some;
     },
 

@@ -15,13 +15,14 @@ export function count<T>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true, count];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return count;
     },
 

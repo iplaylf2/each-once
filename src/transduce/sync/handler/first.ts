@@ -15,13 +15,14 @@ export function first<T, K = T>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true, first];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return first;
     },
 

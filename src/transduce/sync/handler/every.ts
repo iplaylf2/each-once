@@ -21,13 +21,14 @@ export function every<T, K>(
       if (continue_) {
         return [false];
       } else {
+        squeeze?.(false);
         isDone = true;
         return [true, every];
       }
     },
     done() {
       isDone = true;
-      squeeze?.();
+      squeeze?.(true);
       return every;
     },
 
