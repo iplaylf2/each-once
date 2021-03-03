@@ -22,13 +22,14 @@ export function every<T, K>(
       if (continue_) {
         return [false];
       } else {
+        await squeeze?.(false);
         isDone = true;
         return [true, every];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await squeeze?.(true);
       return every;
     },
 

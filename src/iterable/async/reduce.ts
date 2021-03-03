@@ -13,15 +13,16 @@ export function reduce<T, K, R>(
     let r = v;
     const [transduce, squeeze] = tf(async (x) => ((r = await rf(r, x)), true));
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return r;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return r;
   };
 }

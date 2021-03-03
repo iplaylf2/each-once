@@ -5,15 +5,16 @@ export function last<T, K>(tf: AsyncTransduceFunction<T, K>) {
     let last: K;
     const [transduce, squeeze] = tf(async (x) => ((last = x), true));
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return last!;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return last!;
   };
 }

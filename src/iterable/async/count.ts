@@ -5,15 +5,16 @@ export function count<T>(tf: AsyncTransduceFunction<T, any>) {
     let count = 0;
     const [transduce, squeeze] = tf(async () => (count++, true));
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return count;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return count;
   };
 }

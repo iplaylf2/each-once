@@ -5,15 +5,16 @@ export function first<T, K>(tf: AsyncTransduceFunction<T, K>) {
     let first: K;
     const [transduce, squeeze] = tf(async (x) => ((first = x), false));
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return first!;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return first!;
   };
 }

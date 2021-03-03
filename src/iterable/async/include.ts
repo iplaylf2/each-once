@@ -7,15 +7,16 @@ export function include<T, K>(v: K, tf: AsyncTransduceFunction<T, K>) {
       async (x) => x !== v || ((include = true), false)
     );
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return include;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return include;
   };
 }

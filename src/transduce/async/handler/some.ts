@@ -22,13 +22,14 @@ export function some<T, K>(
       if (continue_) {
         return [false];
       } else {
+        await squeeze?.(false);
         isDone = true;
         return [true, some];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await squeeze?.(true);
       return some;
     },
 

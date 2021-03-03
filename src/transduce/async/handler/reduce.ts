@@ -22,13 +22,14 @@ export function reduce<T, K, R>(
       if (continue_) {
         return [false];
       } else {
+        await squeeze?.(false);
         isDone = true;
         return [true, r];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await squeeze?.(true);
       return r;
     },
 

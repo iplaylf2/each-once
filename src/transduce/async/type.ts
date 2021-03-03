@@ -3,11 +3,11 @@ interface Raise<T> {
 }
 
 interface Squeeze {
-  (): Promise<boolean>;
+  (continue_: boolean): Promise<boolean>;
 }
 
 export interface AsyncTransduceFunction<T, K> {
-  (next: Raise<K>, squeeze?: Squeeze): [Raise<T>, Squeeze?];
+  (next: Raise<K>): [Raise<T>, Squeeze?];
 }
 
 export type AsyncTransduceFunctionIn<

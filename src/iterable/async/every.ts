@@ -11,15 +11,16 @@ export function every<T, K>(f: Predicate<K>, tf: AsyncTransduceFunction<T, K>) {
       async (x) => (await f(x)) || ((every = false), false)
     );
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return every;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return every;
   };
 }

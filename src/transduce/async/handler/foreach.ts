@@ -20,13 +20,14 @@ export function foreach<T, K>(
       if (continue_) {
         return [false];
       } else {
+        await squeeze?.(false);
         isDone = true;
         return [true] as any;
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await squeeze?.(true);
       return;
     },
 

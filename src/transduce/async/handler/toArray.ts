@@ -15,13 +15,14 @@ export function toArray<T, K = T>(
       if (continue_) {
         return [false];
       } else {
+        await squeeze?.(false);
         isDone = true;
         return [true, result];
       }
     },
     async done() {
       isDone = true;
-      await squeeze?.();
+      await squeeze?.(true);
       return result;
     },
 

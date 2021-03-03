@@ -11,15 +11,16 @@ export function some<T, K>(f: Predicate<K>, tf: AsyncTransduceFunction<T, K>) {
       (await f(x)) ? ((some = true), false) : true
     );
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return some;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
     return some;
   };
 }

@@ -8,14 +8,15 @@ export function foreach<T, K>(f: Action<K>, tf: AsyncTransduceFunction<T, K>) {
   return async function (iter: AsyncIterable<T>): Promise<void> {
     const [transduce, squeeze] = tf(async (x) => (await f(x)) !== false);
 
+    let continue_ = true;
     for await (const x of iter) {
-      const continue_ = await transduce(x);
-
-      if (!continue_) {
-        return;
+      if (!(await transduce(x))) {
+        continue_ = false;
+        break;
       }
     }
 
-    await squeeze?.();
+    await squeeze?.(continue_);
+    
   };
 }

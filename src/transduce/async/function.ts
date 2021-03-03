@@ -34,18 +34,23 @@ export function remove<T>(f: Predicate<T>): AsyncTransduceFunction<T, T> {
 export function take<T>(n: number): AsyncTransduceFunction<T, T> {
   n = Math.ceil(n);
   if (0 < n) {
-    return (next, squeeze) => {
+    return (next) => {
       let count = n;
+      let dispose = false;
+      let last: T;
       return [
         async (x) => {
           count--;
           if (count === 0) {
-            (await next(x)) && (await squeeze?.());
+            // raise 'break' as soon as possible
+            dispose = true;
+            last = x;
             return false;
           } else {
             return next(x);
           }
         },
+        async (continue_) => (dispose ? next(last) : continue_),
       ];
     };
   } else {
@@ -54,9 +59,20 @@ export function take<T>(n: number): AsyncTransduceFunction<T, T> {
 }
 
 export function takeWhile<T>(f: Predicate<T>): AsyncTransduceFunction<T, T> {
-  return (next, squeeze) => [
-    async (x) => ((await f(x)) ? next(x) : (await squeeze?.(), false)),
-  ];
+  return (next) => {
+    let dispose = false;
+    return [
+      async (x) => {
+        if (await f(x)) {
+          return next(x);
+        } else {
+          dispose = true;
+          return false;
+        }
+      },
+      async (continue_) => dispose || continue_,
+    ];
+  };
 }
 
 export function skip<T>(n: number): AsyncTransduceFunction<T, T> {
@@ -120,7 +136,7 @@ export function partition<T>(n: number): AsyncTransduceFunction<T, T[]> {
           return true;
         }
       },
-      async () => (0 < cache.length ? next(cache) : true),
+      async (continue_) => continue_ && (0 < cache.length ? next(cache) : true),
     ];
   };
 }
@@ -144,7 +160,7 @@ export function partitionBy<T>(f: Map<T, any>): AsyncTransduceFunction<T, T[]> {
         }
         return true;
       },
-      async () => (cache ? next(cache) : true),
+      async (continue_) => continue_ && (cache ? next(cache) : true),
     ];
   };
 }
