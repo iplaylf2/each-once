@@ -9,7 +9,7 @@ export function foreach<T, K>(
   f: Action<OR<K, T>>,
   tf?: AsyncTransduceFunction<T, K>
 ): AsyncTransduceHandler<T, void> {
-  let transduce: any = async (x: any) => (await f(x)) !== false,
+  let transduce: any = f,
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 

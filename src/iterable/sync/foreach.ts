@@ -6,7 +6,7 @@ interface Action<T> {
 
 export function foreach<T, K>(f: Action<K>, tf: TransduceFunction<T, K>) {
   return function (iter: Iterable<T>): void {
-    const [transduce, dispose] = tf((x) => f(x) !== false);
+    const [transduce, dispose] = tf(f);
 
     let continue_ = true;
     for (const x of iter) {
