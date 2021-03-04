@@ -13,19 +13,19 @@ export function groupBy<T, Key, K>(
   gr: GroupByReduce<T, Key, K>
 ): AsyncTransduceFunction<T, K> {
   return (next) => {
-    const groupMap = new Map<
+    const group_map = new Map<
       Key,
       { isDone: boolean; handler?: AsyncTransduceHandler<T, K> }
     >();
-    const groupSort: any[] = [];
+    const group_sort: any[] = [];
     return [
       async (x) => {
         const k = await f(x);
-        let group = groupMap.get(k);
+        let group = group_map.get(k);
         if (!group) {
           group = { isDone: false, handler: gr(k) };
-          groupMap.set(k, group);
-          groupSort.push(group);
+          group_map.set(k, group);
+          group_sort.push(group);
         }
 
         if (!group.isDone) {
@@ -43,7 +43,7 @@ export function groupBy<T, Key, K>(
           return false;
         }
 
-        for (const group of groupSort) {
+        for (const group of group_sort) {
           if (group.isDone) {
             continue;
           }

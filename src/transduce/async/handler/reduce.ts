@@ -15,7 +15,6 @@ export function reduce<T, K, R>(
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
-  let isDone = false;
   return {
     async reduce(x) {
       const continue_ = await transduce(x);
@@ -23,12 +22,11 @@ export function reduce<T, K, R>(
         return [false];
       } else {
         await dispose?.(false);
-        isDone = true;
+
         return [true, r];
       }
     },
     async done() {
-      isDone = true;
       await dispose?.(true);
       return r;
     },

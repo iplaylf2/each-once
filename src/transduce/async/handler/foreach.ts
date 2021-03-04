@@ -13,7 +13,6 @@ export function foreach<T, K>(
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
-  let isDone = false;
   return {
     async reduce(x) {
       const continue_ = await transduce(x);
@@ -21,12 +20,11 @@ export function foreach<T, K>(
         return [false];
       } else {
         await dispose?.(false);
-        isDone = true;
+
         return [true] as any;
       }
     },
     async done() {
-      isDone = true;
       await dispose?.(true);
       return;
     },
