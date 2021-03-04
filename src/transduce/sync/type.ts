@@ -21,5 +21,4 @@ export type TransduceFunctionOut<
 export interface TransduceHandler<T, K> {
   reduce(x: T): [true, K] | [false];
   done(): K;
-  isDone: boolean;
 }

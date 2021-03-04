@@ -25,9 +25,5 @@ export function last<T, K = T>(
       dispose?.(true);
       return last;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

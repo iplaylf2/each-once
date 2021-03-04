@@ -32,9 +32,5 @@ export function reduce<T, K, R>(
       await dispose?.(true);
       return r;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

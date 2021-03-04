@@ -32,9 +32,5 @@ export function every<T, K>(
       await dispose?.(true);
       return every;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

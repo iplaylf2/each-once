@@ -27,9 +27,5 @@ export function include<T, K>(
       await dispose?.(true);
       return include;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

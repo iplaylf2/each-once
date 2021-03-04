@@ -25,9 +25,5 @@ export function first<T, K = T>(
       dispose?.(true);
       return first;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

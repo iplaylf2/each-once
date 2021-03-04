@@ -25,9 +25,5 @@ export function toArray<T, K = T>(
       await dispose?.(true);
       return result;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

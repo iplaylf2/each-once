@@ -25,9 +25,5 @@ export function count<T>(
       dispose?.(true);
       return count;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

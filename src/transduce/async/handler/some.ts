@@ -32,9 +32,5 @@ export function some<T, K>(
       await dispose?.(true);
       return some;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

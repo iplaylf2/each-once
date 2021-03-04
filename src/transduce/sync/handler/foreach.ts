@@ -30,9 +30,5 @@ export function foreach<T, K>(
       dispose?.(true);
       return;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

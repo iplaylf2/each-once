@@ -30,9 +30,5 @@ export function foreach<T, K>(
       await dispose?.(true);
       return;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

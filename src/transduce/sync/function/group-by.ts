@@ -13,21 +13,26 @@ export function groupBy<T, Key, K>(
   gr: GroupByReduce<T, Key, K>
 ): TransduceFunction<T, K> {
   return (next) => {
-    const groupMap = new Map<Key, TransduceHandler<T, K>>();
-    const groupSort: TransduceHandler<T, K>[] = [];
+    const groupMap = new Map<
+      Key,
+      { isDone: boolean; handler?: TransduceHandler<T, K> }
+    >();
+    const groupSort: any[] = [];
     return [
       (x) => {
         const k = f(x);
         let group = groupMap.get(k);
         if (!group) {
-          group = gr(k);
+          group = { isDone: false, handler: gr(k) };
           groupMap.set(k, group);
           groupSort.push(group);
         }
 
         if (!group.isDone) {
-          const [done, result] = group.reduce(x);
+          const [done, result] = group.handler!.reduce(x);
           if (done) {
+            group.isDone = true;
+            group.handler = null!;
             return next(result!);
           }
         }
@@ -43,7 +48,9 @@ export function groupBy<T, Key, K>(
             continue;
           }
 
-          const result = group.done();
+          const result = group.handler.done();
+          group.isDone = true;
+          group.handler = null;
           const continue_ = next(result);
 
           if (!continue_) {

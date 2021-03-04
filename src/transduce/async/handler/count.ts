@@ -25,9 +25,5 @@ export function count<T>(
       await dispose?.(true);
       return count;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }

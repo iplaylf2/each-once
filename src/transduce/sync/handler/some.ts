@@ -31,9 +31,5 @@ export function some<T, K>(
       dispose?.(true);
       return some;
     },
-
-    get isDone() {
-      return isDone;
-    },
   };
 }
