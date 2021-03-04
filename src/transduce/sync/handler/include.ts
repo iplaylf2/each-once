@@ -10,7 +10,6 @@ export function include<T, K>(
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
-
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -23,7 +22,6 @@ export function include<T, K>(
       }
     },
     done() {
-
       dispose?.(true);
       return include;
     },

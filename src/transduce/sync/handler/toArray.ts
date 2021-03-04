@@ -8,7 +8,6 @@ export function toArray<T, K = T>(
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
-
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -21,7 +20,6 @@ export function toArray<T, K = T>(
       }
     },
     done() {
-
       dispose?.(true);
       return result;
     },

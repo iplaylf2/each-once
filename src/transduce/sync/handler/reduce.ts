@@ -15,7 +15,6 @@ export function reduce<T, K, R>(
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
-
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -28,7 +27,6 @@ export function reduce<T, K, R>(
       }
     },
     done() {
-
       dispose?.(true);
       return r;
     },
