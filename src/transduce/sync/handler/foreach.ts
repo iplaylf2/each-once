@@ -9,10 +9,9 @@ export function foreach<T, K>(
   f: Action<OR<K, T>>,
   tf?: TransduceFunction<T, K>
 ): TransduceHandler<T, void> {
-  let transduce: any = f,
+  let transduce: any = (x: any) => (f(x), true),
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
-
 
   return {
     reduce(x) {
@@ -26,7 +25,6 @@ export function foreach<T, K>(
       }
     },
     done() {
-
       dispose?.(true);
       return;
     },

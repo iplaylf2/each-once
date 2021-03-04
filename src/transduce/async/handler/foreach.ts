@@ -2,14 +2,14 @@ import { AsyncTransduceFunction, AsyncTransduceHandler } from "../type";
 import { OR } from "./tool";
 
 interface Action<T> {
-  (x: T): any;
+  (x: T): void | Promise<void>;
 }
 
 export function foreach<T, K>(
   f: Action<OR<K, T>>,
   tf?: AsyncTransduceFunction<T, K>
 ): AsyncTransduceHandler<T, void> {
-  let transduce: any = f,
+  let transduce: any = async (x: any) => (await f(x), true),
     dispose: any;
   [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
 
