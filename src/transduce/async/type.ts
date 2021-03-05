@@ -21,5 +21,4 @@ export type AsyncTransduceFunctionOut<
 export interface AsyncTransduceHandler<T, K> {
   reduce(x: T): Promise<[true, K] | [false]>;
   done(): Promise<K>;
-  isDone: boolean;
 }

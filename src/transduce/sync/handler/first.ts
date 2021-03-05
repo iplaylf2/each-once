@@ -6,9 +6,10 @@ export function first<T, K = T>(
   let first: K;
   let transduce: any = (x: any) => ((first = x), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -16,18 +17,13 @@ export function first<T, K = T>(
         return [false];
       } else {
         dispose?.(false);
-        isDone = true;
+
         return [true, first];
       }
     },
     done() {
-      isDone = true;
       dispose?.(true);
       return first;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }

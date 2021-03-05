@@ -8,9 +8,10 @@ export function include<T, K>(
   let include = false;
   let transduce: any = (x: any) => x !== v || ((include = true), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     async reduce(x) {
       const continue_ = await transduce(x);
@@ -18,18 +19,13 @@ export function include<T, K>(
         return [false];
       } else {
         await dispose?.(false);
-        isDone = true;
+
         return [true, include];
       }
     },
     async done() {
-      isDone = true;
       await dispose?.(true);
       return include;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }

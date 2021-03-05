@@ -6,9 +6,10 @@ export function last<T, K = T>(
   let last: K;
   let transduce: any = (x: any) => ((last = x), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     async reduce(x) {
       const continue_ = await transduce(x);
@@ -16,18 +17,13 @@ export function last<T, K = T>(
         return [false];
       } else {
         await dispose?.(false);
-        isDone = true;
+
         return [true, last];
       }
     },
     async done() {
-      isDone = true;
       await dispose?.(true);
       return last;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }

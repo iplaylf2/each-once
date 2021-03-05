@@ -12,9 +12,10 @@ export function some<T, K>(
   let some = false;
   let transduce: any = (x: any) => (f(x) ? ((some = true), false) : true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -22,18 +23,13 @@ export function some<T, K>(
         return [false];
       } else {
         dispose?.(false);
-        isDone = true;
+
         return [true, some];
       }
     },
     done() {
-      isDone = true;
       dispose?.(true);
       return some;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }

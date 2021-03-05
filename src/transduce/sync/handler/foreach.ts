@@ -2,18 +2,19 @@ import { TransduceFunction, TransduceHandler } from "../type";
 import { OR } from "./tool";
 
 interface Action<T> {
-  (x: T): any;
+  (x: T): void;
 }
 
 export function foreach<T, K>(
   f: Action<OR<K, T>>,
   tf?: TransduceFunction<T, K>
 ): TransduceHandler<T, void> {
-  let transduce: any = (x: any) => f(x) !== false,
+  let transduce: any = (x: any) => (f(x), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -21,18 +22,13 @@ export function foreach<T, K>(
         return [false];
       } else {
         dispose?.(false);
-        isDone = true;
+
         return [true] as any;
       }
     },
     done() {
-      isDone = true;
       dispose?.(true);
       return;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }

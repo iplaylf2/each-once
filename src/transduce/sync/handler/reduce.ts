@@ -13,9 +13,10 @@ export function reduce<T, K, R>(
   let r = v;
   let transduce: any = (x: any) => ((r = rf(r, x)), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
-  let isDone = false;
   return {
     reduce(x) {
       const continue_ = transduce(x);
@@ -23,18 +24,13 @@ export function reduce<T, K, R>(
         return [false];
       } else {
         dispose?.(false);
-        isDone = true;
+
         return [true, r];
       }
     },
     done() {
-      isDone = true;
       dispose?.(true);
       return r;
-    },
-
-    get isDone() {
-      return isDone;
     },
   };
 }
