@@ -8,7 +8,9 @@ export function include<T, K>(
   let include = false;
   let transduce: any = (x: any) => x !== v || ((include = true), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

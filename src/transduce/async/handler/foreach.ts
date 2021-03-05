@@ -11,7 +11,9 @@ export function foreach<T, K>(
 ): AsyncTransduceHandler<T, void> {
   let transduce: any = async (x: any) => (await f(x), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

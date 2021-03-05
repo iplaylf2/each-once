@@ -12,7 +12,9 @@ export function every<T, K>(
   let every = true;
   let transduce: any = (x: any) => f(x) || ((every = false), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     reduce(x) {

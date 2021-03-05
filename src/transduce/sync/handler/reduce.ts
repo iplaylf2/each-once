@@ -13,7 +13,9 @@ export function reduce<T, K, R>(
   let r = v;
   let transduce: any = (x: any) => ((r = rf(r, x)), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     reduce(x) {

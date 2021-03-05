@@ -11,7 +11,9 @@ export function foreach<T, K>(
 ): TransduceHandler<T, void> {
   let transduce: any = (x: any) => (f(x), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     reduce(x) {

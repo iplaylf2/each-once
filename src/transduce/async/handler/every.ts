@@ -13,7 +13,9 @@ export function every<T, K>(
   let transduce: any = async (x: any) =>
       (await f(x)) || ((every = false), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

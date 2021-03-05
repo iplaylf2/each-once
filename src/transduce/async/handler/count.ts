@@ -6,7 +6,9 @@ export function count<T>(
   let count = 0;
   let transduce: any = () => (count++, true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

@@ -13,7 +13,9 @@ export function some<T, K>(
   let transduce: any = async (x: any) =>
       (await f(x)) ? ((some = true), false) : true,
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

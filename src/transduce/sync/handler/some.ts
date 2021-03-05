@@ -12,7 +12,9 @@ export function some<T, K>(
   let some = false;
   let transduce: any = (x: any) => (f(x) ? ((some = true), false) : true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     reduce(x) {

@@ -6,7 +6,9 @@ export function first<T, K = T>(
   let first: K;
   let transduce: any = (x: any) => ((first = x), false),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     async reduce(x) {

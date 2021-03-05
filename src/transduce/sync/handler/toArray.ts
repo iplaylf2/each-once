@@ -6,7 +6,9 @@ export function toArray<T, K = T>(
   let result: K[] = [];
   let transduce: any = (x: any) => (result.push(x), true),
     dispose: any;
-  [transduce, dispose] = tf ? tf(transduce) : [transduce]!;
+  if (tf) {
+    [transduce, dispose] = tf(transduce);
+  }
 
   return {
     reduce(x) {
